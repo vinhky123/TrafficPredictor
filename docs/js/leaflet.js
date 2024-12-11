@@ -36,7 +36,7 @@ function loadJSONData() {
                     ${location.name} 
                     <br>
                     <button class="marker-button" data-name="${location.name}">
-                        Dự đoán
+                        Theo dõi tình hình
                     </button>
                 `);
 
