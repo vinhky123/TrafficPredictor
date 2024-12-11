@@ -13,8 +13,7 @@ var tileLayer = L.tileLayer(
 var locationsDataList = [];
 
 function loadJSONData() {
-	// Sử dụng đường dẫn tuyệt đối để đảm bảo chính xác
-	const jsonPath = `${window.location.origin}/assets/locations.json`;
+	const jsonPath = "docs/assets/locations.json";
 
 	fetch(jsonPath)
 		.then((response) => {
@@ -113,6 +112,5 @@ function initializeMap() {
 	setTimeout(() => {
 		map.invalidateSize();
 	}, 0);
-	console.log(`${window.location.origin}/assets/locations.json`);
 	loadJSONData();
 }
