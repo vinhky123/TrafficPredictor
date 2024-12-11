@@ -13,8 +13,16 @@ var tileLayer = L.tileLayer(
 var locationsDataList = [];
 
 function loadJSONData() {
-	fetch("../assets/locations.json")
-		.then((response) => response.json())
+	// Sử dụng đường dẫn tuyệt đối để đảm bảo chính xác
+	const jsonPath = `${window.location.origin}/assets/locations.json`;
+
+	fetch(jsonPath)
+		.then((response) => {
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			return response.json();
+		})
 		.then((data) => {
 			var locationsData = data;
 
