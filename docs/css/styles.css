@@ -67,7 +67,7 @@ body, html {
 
 .welcome-container {
     background: rgba(255, 255, 255, 0.8); /* Màu trắng đục */
-    padding: 20px;
+    padding: 50px;
     border-radius: 10px; /* Bo góc */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Đổ bóng */
     display: flex;
