@@ -13,7 +13,7 @@ var tileLayer = L.tileLayer(
 var locationsDataList = [];
 
 function loadJSONData() {
-	const jsonPath = "docs/assets/locations.json";
+	const jsonPath = "/tree/main/docs/assets/locations.json";
 
 	fetch(jsonPath)
 		.then((response) => {
