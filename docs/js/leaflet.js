@@ -13,7 +13,8 @@ var tileLayer = L.tileLayer(
 var locationsDataList = [];
 
 function loadJSONData() {
-	const jsonPath = "/tree/main/docs/assets/locations.json";
+	const jsonPath =
+		"https://github.com/vinhky123/TrafficPredictor/blob/main/docs/assets/locations.json";
 
 	fetch(jsonPath)
 		.then((response) => {
