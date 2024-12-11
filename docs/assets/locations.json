@@ -1,0 +1,52 @@
+[
+    {
+        "name": "Cầu Sài Gòn",
+        "description": "",
+        "coordinates": { "lat": 10.798905, "lng": 106.726998 }
+    },
+    {
+        "name": "Ngã Tư Thủ Đức",
+        "description": "",
+        "coordinates": { "lat": 10.849319, "lng": 106.773959 }
+    },
+    {
+        "name": "Cầu Rạch Chiếc",
+        "description": "",
+        "coordinates": { "lat": 10.813187, "lng": 106.756803 }
+    },
+    {
+        "name": "Cầu Điện Biên Phủ",
+        "description": "",
+        "coordinates": { "lat": 10.793411, "lng": 106.700390 }
+    },
+    {
+        "name": "Đại Học Bách Khoa",
+        "description": "", 
+        "coordinates": { "lat": 10.772122, "lng":  106.657589}
+    },
+    {
+        "name": "Công viên Hoàng Văn Thụ",
+        "description": "",
+        "coordinates": { "lat": 10.801761, "lng": 106.664923 }
+    },
+    {
+        "name": "Vòng xoay Dân Chủ",
+        "description": "",
+        "coordinates": { "lat": 10.777923, "lng": 106.681344 }
+    },
+    {
+        "name": "Công viên Lê Thị Riêng",
+        "description": "",
+        "coordinates": { "lat": 10.785456, "lng": 106.663261 }
+    },
+    {
+        "name": "Đường Trường Chinh",
+        "description": "",
+        "coordinates": { "lat": 10.816761, "lng": 106.631952 }
+    },
+    {
+        "name": "Đường Cộng Hòa",
+        "description": "",
+        "coordinates": { "lat": 10.801900, "lng": 106.648617 }
+    }
+]
