@@ -15,6 +15,7 @@ var locationsDataList = [];
 function loadJSONData() {
 	// Sử dụng đường dẫn tuyệt đối để đảm bảo chính xác
 	const jsonPath = `${window.location.origin}/assets/locations.json`;
+	console.log("Loading JSON data from:", jsonPath);
 
 	fetch(jsonPath)
 		.then((response) => {
