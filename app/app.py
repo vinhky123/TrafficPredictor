@@ -12,7 +12,7 @@ CORS(app)
 client = DBClient()
 getter = DataGetter(client)
 
-@app.route("/predict", methods=["POST"])
+@app.route("/current", methods=["POST"])
 def predict():
 
     if not request.is_json:

@@ -1,6 +1,6 @@
 Flask
-scikit-learn
-joblib
-torch
+flask_cors
 pandas
 numpy
+pymongo
+python-dotenv
