@@ -25,7 +25,7 @@ def home():
     <body>
         <h1>Welcome to the Traffic Prediction App</h1>
         <p>Vào /current endpoint để lấy thông tin</p>
-        <p>Vào <a href="https://traffic-predictor-one.vercel.app/">ĐÂY/</a> để sử dụng</p>
+        <p>Vào <a href="https://traffic-predictor-one.vercel.app/">ĐÂY</a> để sử dụng</p>
     </body>
     </html>
     """, 200
