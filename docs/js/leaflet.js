@@ -1,5 +1,5 @@
 var map = L.map("map").setView([10.795376, 106.661339], 12);
-HOST = "https://3.107.51.155";
+HOST = "https://vinhkyyy.duckdns.org/";
 
 var tileLayer = L.tileLayer(
 	"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",

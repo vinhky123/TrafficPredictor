@@ -33,4 +33,8 @@ def predict():
     #return jsonify({"result": f"Server ok nha, nhận được {data}"}), 200
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=443, debug=False, ssl_context=("/home/ec2-user/cert.pem", "/home/ec2-user/key.pem"))
+    app.run(
+        host="0.0.0.0",
+        port=5000, debug=False
+    )
+    #app.run(host="0.0.0.0", port=443, debug=False, ssl_context=("/home/ec2-user/cert.pem", "/home/ec2-user/key.pem"))
