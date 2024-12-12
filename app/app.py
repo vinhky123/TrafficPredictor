@@ -14,7 +14,21 @@ getter = DataGetter(client)
 
 @app.route("/", methods=["GET"])
 def home():
-    return jsonify({"message": "Hello World"}), 200
+    return """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Home</title>
+    </head>
+    <body>
+        <h1>Welcome to the Traffic Prediction App</h1>
+        <p>Vào /current endpoint để lấy thông tin</p>
+        <p>Vào <a href="https://traffic-predictor-one.vercel.app/">ĐÂY/</a> để sử dụng</p>
+    </body>
+    </html>
+    """, 200
 
 @app.route("/current", methods=["POST"])
 def predict():
