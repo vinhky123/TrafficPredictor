@@ -12,6 +12,10 @@ CORS(app)
 client = DBClient()
 getter = DataGetter(client)
 
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({"message": "Hello World"}), 200
+
 @app.route("/current", methods=["POST"])
 def predict():
 
