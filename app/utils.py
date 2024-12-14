@@ -1,3 +1,5 @@
+from mongodb.linker import DBClient
+
 LOCATIONS = {
     (10.798905, 106.726998): "SaiGonBride",
     (10.849319, 106.773959): "TD_Crossroads",
@@ -29,10 +31,10 @@ class Mapping:
     def __init__(self):
         pass
 
-    def get_location_name(location):
+    def get_location_name(self, location):
         return LOCATIONS.get(location)
 
-    def get_location_index(location):
+    def get_location_index(self, location):
         return NAME.index(LOCATIONS.get(location)) + 1
 
     def get_all_location(self):
@@ -59,4 +61,15 @@ class DataGetter(object):
         collection = db[collection_name]
 
         result = collection.find_one({}, {"Speed": 1, "_id": 0}, sort=[("_id", -1)])
+        return result["Speed"]
+
+    def get_predict_data(self, location):
+        collection_name = "Predictions"
+        db = self.client["Traffic"]
+        collection = db[collection_name]
+        name = self.mapper.get_location_name(location)
+
+        result = collection.find_one(
+            {"Name": name}, {"Speed": 1, "_id": 0}, sort=[("_id", -1)]
+        )
         return result["Speed"]

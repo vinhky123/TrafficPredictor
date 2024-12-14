@@ -294,7 +294,7 @@ class FineTuneTimeXer(nn.Module):
             num_layers=self.num_layers,
         )
 
-        self.pretrain_model.load_state_dict(torch.load("best_model_TimeXer.pth"))
+        # self.pretrain_model.load_state_dict(torch.load("best_model_TimeXer.pth"))
 
         for name, param in self.pretrain_model.named_parameters():
             if not name.startswith("head"):  # Kiểm tra theo tên thực tế của các lớp
@@ -326,11 +326,13 @@ class GetModel(object):
             num_layers=6,
         )
 
-        self.model.load_state_dict(torch.load("TimeXer.pth"))
+        # self.model.load_state_dict(torch.load("TimeXer.pth"))
 
         self.model.eval()
 
     def predict(self, x):
+        """
+        TESTINGGGG
         if isinstance(x, torch.Tensor):
             x = x
         else:
@@ -339,5 +341,5 @@ class GetModel(object):
         x = x.unsqueeze(0)
         with torch.no_grad():
             output = self.model(x)
-
-        return output  # [1, 12, 10]
+        """
+        return torch.randn(1, 12, 10)  # [1, 12, 10]
