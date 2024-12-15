@@ -1,4 +1,5 @@
 from mongodb.linker import DBClient
+import pandas as pd
 
 LOCATIONS = {
     (10.798905, 106.726998): "SaiGonBride",
@@ -63,6 +64,39 @@ class DataGetter(object):
         result = collection.find_one({}, {"Speed": 1, "_id": 0}, sort=[("_id", -1)])
         return result["Speed"]
 
+    def get_all_data(self):
+        locations = self.mapper.get_all_location()
+        db = self.client["Traffic"]
+
+        # Dictionary để lưu dữ liệu Speed từ các collection
+        data = {}
+
+        for location in locations:
+            location_name = self.mapper.get_location_name(location)
+            collection = db[location_name]
+
+            # Lấy dữ liệu từ mỗi collection
+            results = collection.find({}, {"Speed": 1, "_id": 0}).sort("_id", -1)
+            speeds = [
+                (
+                    round(record.get("Speed", 0) * 3.6, 2)
+                    if record.get("Speed") is not None
+                    else 0
+                )
+                for record in results
+            ]
+
+            # Thêm dữ liệu vào dictionary với key là tên location
+            data[location_name] = speeds
+
+        # Chuyển dictionary thành DataFrame
+        df = pd.DataFrame(data)
+
+        # Lưu DataFrame ra file CSV
+        df.to_csv("traffic_data.csv", index=False)
+
+        return df
+
     def get_predict_data(self, location):
         collection_name = "Predictions"
         db = self.client["Traffic"]
@@ -73,3 +107,7 @@ class DataGetter(object):
             {"Name": name}, {"Speed": 1, "_id": 0}, sort=[("_id", -1)]
         )
         return result["Speed"]
+
+
+getter = DataGetter(DBClient())
+getter.get_all_data()

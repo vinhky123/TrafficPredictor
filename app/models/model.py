@@ -342,4 +342,5 @@ class GetModel(object):
         with torch.no_grad():
             output = self.model(x)
         """
+
         return torch.randn(1, 12, 10)  # [1, 12, 10]
