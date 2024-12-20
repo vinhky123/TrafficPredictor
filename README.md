@@ -13,7 +13,7 @@ Including the state-of-the-art model with transformer architecture in time serie
 This is the model I used in this project. The TimeXer model learns both the covariation from exogenous and endogenous through Attention with a global parameter that help the model makes a better prediction 
 
 ## Front end
-Basic front end built with html, css, js is hosted at [Frontend](https://traffic-predictor-one.vercel.app/) inside the web folder. I used the free open source Leaflet that help me create a map and custome it. And it totally FREEE
+Basic front end built with html, css, js is hosted at [Vercel](https://traffic-predictor-one.vercel.app/) inside the web folder. I used the free open source Leaflet that help me create a map and custome it. And it totally FREEE
 
 # Back end
 A Flask made back end is in the folder app. To run this back end, you will need to 
@@ -44,7 +44,5 @@ But this backend have a .env contain password to my mongodb, maybe you need to c
 ![Architecture of back end](image/architecture.png)
 
 I have another VM run on ec2 to calling HERE api every 5 mins to get the current traffic to collect them into my mongodb. Because traffic services don't give me historical data so I have to do this :joy:
-There are 8 locations in Ho Chi Minh City I used to get data, maybe you wanna have a look in 
-```
-/web/assets/locations.json
-```
+
+There are 8 locations in Ho Chi Minh City I used to get data, maybe you wanna have a look in ```/web/assets/locations.json```
