@@ -41,7 +41,7 @@ python3 app.py
 But this backend have a .env contain password to my mongodb, maybe you need to create your own database traffic if you wanna run your own app :joy:
 
 ## Server architecture
-[Architecture of back end](image/architecture.png)
+![Architecture of back end](image/architecture.png)
 
 I have another VM run on ec2 to calling HERE api every 5 mins to get the current traffic to collect them into my mongodb. Because traffic services don't give me historical data so I have to do this :joy:
 There are 8 locations in Ho Chi Minh City I used to get data, maybe you wanna have a look in 
