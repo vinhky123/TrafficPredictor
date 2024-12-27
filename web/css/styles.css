@@ -47,7 +47,7 @@ body, html {
 }
 
 .welcome-page {
-    background-image: linear-gradient(to right top, #03045e, #004491, #257eb7, #76b8d6, #caf0f8);
+    background-image: linear-gradient(to right top, #0077b6, #4096c6, #6db4d6, #9bd2e6, #caf0f8);
 }
 
 .welcome-container h1 {
