@@ -2,9 +2,7 @@
 @import url('loader.css');
 @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
-
-
-
+@import url('https://fonts.googleapis.com/css2?family=Nafy+Angkor&display=swap');
 
 .fade-out {
     animation: fadeOut 0.3s forwards;
@@ -53,15 +51,15 @@ body, html {
 }
 
 .welcome-container h1 {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 3rem; /* Kích thước tiêu đề lớn */
+    font-family: 'Angkor', cursive;
+    font-size: 3rem; 
     font-weight: bold;
-    font-weight: 600; /* Đậm hơn một chút */
+    font-weight: 600; 
     color: #1F2421;
     text-align: center;
     margin: 0;
     max-width: 90%;
-    line-height: 1.2; /* Giảm khoảng cách giữa các dòng */
+    line-height: 1.2; 
 }
 
 
