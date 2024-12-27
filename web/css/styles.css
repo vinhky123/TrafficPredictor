@@ -4,8 +4,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 
 @font-face {
-    font-family: 'NatureBeauty';
-    src: url('/assets/NatureBeauty.ttf') format('truetype');
+    font-family: 'MontserratBlack';
+    src: url('/MontserratBlack.ttf') format('truetype');
     font-weight: normal; 
     font-style: normal;  
 }
@@ -57,7 +57,7 @@ body, html {
 }
 
 .welcome-container h1 {
-    font-family: 'NatureBeauty', sans-serif;
+    font-family: 'MontserratBlack', sans-serif;
     font-size: 3rem; 
     font-weight: bold;
     font-weight: 600; 
