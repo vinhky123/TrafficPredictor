@@ -2,7 +2,7 @@
 @import url('loader.css');
 @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Nafy+Angkor&display=swap');
+@import url('https://fonts.google.com/specimen/Angkor?query=Angkor&display=swap');
 
 .fade-out {
     animation: fadeOut 0.3s forwards;
