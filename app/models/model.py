@@ -1,6 +1,10 @@
 import torch
 import math
 import torch.nn as nn
+import os
+
+base_dir = os.getcwd()
+model_state_path = os.path.join(base_dir, "notebook/TimeXer.pth")
 
 
 class PositionalEmbedding(nn.Module):
@@ -92,13 +96,15 @@ class Attention(nn.Module):
         )
         self.dropout = nn.Dropout(dropout)
 
-    def forward(self, query, key, value):
+    def forward(self, query, key, value, attn_mask=None):
 
         query = query.permute(1, 0, 2)  # (B, L, D) -> (L, B, D)
         key = key.permute(1, 0, 2)
         value = value.permute(1, 0, 2)
 
-        attn_output, attn_weights = self.multihead_attn(query, key, value)
+        attn_output, attn_weights = self.multihead_attn(
+            query, key, value, attn_mask=attn_mask
+        )
         attn_output = attn_output.permute(1, 0, 2)  # (L, B, D) -> (B, L, D)
         return self.dropout(attn_output)
 
@@ -120,10 +126,11 @@ class TX_EncoderLayer(nn.Module):
         self.dropout = nn.Dropout(0.1)
         self.activation = nn.functional.gelu
 
-    def forward(self, x, cross):
+    def forward(self, x, cross, attn_mask=None):
         B, L, D = cross.shape
         # Self-Attention
         attn = self.self_attn(x, x, x)
+        # attn = self.self_attn(x, x, x, attn_mask=attn_mask)
         x = x + self.dropout(attn)
         x = self.norm1(x)
 
@@ -131,7 +138,7 @@ class TX_EncoderLayer(nn.Module):
         glb_token_ori = x[:, -1, :].unsqueeze(1)
         glb = torch.reshape(glb_token_ori, (B, -1, D))
 
-        cross_attn = self.cross_attn(glb, cross, cross)
+        cross_attn = self.cross_attn(glb, cross, cross, attn_mask=attn_mask)
         cross_attn = torch.reshape(
             cross_attn, (cross_attn.shape[0] * cross_attn.shape[1], cross_attn.shape[2])
         ).unsqueeze(1)
@@ -157,10 +164,10 @@ class TX_Encoder(nn.Module):
         )
         self.norm = nn.LayerNorm(d_model)
 
-    def forward(self, x, cross):
+    def forward(self, x, cross, attn_mask=None):
         # B, L, D
         for layer in self.e_layers:
-            x = layer(x, cross)
+            x = layer(x, cross, attn_mask=attn_mask)
 
         x = self.norm(x)
         return x
@@ -194,18 +201,17 @@ class TimeXer(nn.Module):
         )
         self.ex_embedding = Inverted_EmbeddingData(self.seq_len, self.d_model)
 
+        self.encoder = TX_Encoder(self.d_model, self.num_layers)
         self.head_nf = self.d_model * (self.patch_num + 1)
         self.head = FlattenHead(self.num_variate, self.head_nf, self.pred_len)
 
-        self.encoder = TX_Encoder(self.d_model, self.num_layers)
-
-    def forward(self, x):
+    def forward(self, x, attn_mask=None):
         # (B, seq_len, num_variate)
         if self.use_norm:
             means = x.mean(1, keepdim=True).detach()
             x = x - means
             stdev = torch.sqrt(torch.var(x, dim=1, keepdim=True, unbiased=False) + 1e-5)
-            x /= stdev
+            x = x / stdev
 
         en_data = x.permute(0, 2, 1)
         ex_data = x
@@ -213,7 +219,7 @@ class TimeXer(nn.Module):
         en_embedded, n_vars = self.en_embedding(en_data)
         ex_embedded = self.ex_embedding(ex_data)
 
-        encoder_out = self.encoder(en_embedded, ex_embedded)
+        encoder_out = self.encoder(en_embedded, ex_embedded, attn_mask=attn_mask)
         encoder_out = torch.reshape(
             encoder_out, (-1, n_vars, encoder_out.shape[-2], encoder_out.shape[-1])
         )
@@ -229,118 +235,20 @@ class TimeXer(nn.Module):
         return output
 
 
-class FinetuneProjector(nn.Module):
-    def __init__(self, input_size, target_size, dropout=0.1):
-        super(FinetuneProjector, self).__init__()
-
-        self.projection = nn.Linear(input_size, target_size)
-        self.dropout = nn.Dropout(dropout)
-        self.activation = nn.ReLU()
-
-    def forward(self, x):
-        output_project = self.projection(x)
-        activation = self.activation(output_project)
-        final = self.dropout(output_project)
-        return final
-
-
-class FinetuneEmbedd(nn.Module):
-    def __init__(self, input_size, target_size, dropout=0.1):
-        super(FinetuneEmbedd, self).__init__()
-
-        self.projection = nn.Linear(input_size, target_size)
-        self.dropout = nn.Dropout(dropout)
-        self.activation = nn.ReLU()
-
-    def forward(self, x):
-        output_project = self.projection(x)
-        activation = self.activation(output_project)
-        final = self.dropout(output_project)
-        return final
-
-
-class FineTuneTimeXer(nn.Module):
-    def __init__(
-        self,
-        seq_len,
-        patch_len,
-        patch_num,
-        num_variate,
-        pred_len,
-        new_num_variate,
-        use_norm=True,
-        d_model=256,
-        num_layers=6,
-    ):
-        super(FineTuneTimeXer, self).__init__()
-
-        self.seq_len = seq_len
-        self.patch_len = patch_len
-        self.patch_num = patch_num
-        self.num_variate = num_variate
-        self.pred_len = pred_len
-        self.use_norm = use_norm
-        self.num_layers = num_layers
-        self.d_model = d_model
-        self.new_numvariate = new_num_variate
-
-        self.pretrain_model = TimeXer(
-            seq_len=self.seq_len,
-            num_variate=self.num_variate,
-            pred_len=self.pred_len,
-            d_model=self.d_model,
-            patch_len=self.patch_len,
-            patch_num=self.patch_num,
-            num_layers=self.num_layers,
-        )
-
-        # self.pretrain_model.load_state_dict(torch.load("best_model_TimeXer.pth"))
-
-        for name, param in self.pretrain_model.named_parameters():
-            if not name.startswith("head"):  # Kiểm tra theo tên thực tế của các lớp
-                param.requires_grad = False
-
-        self.embedd = FinetuneEmbedd(new_num_variate, self.num_variate)
-        self.projector = FinetuneProjector(self.num_variate, new_num_variate)
-
-    def forward(self, x):
-        x = self.embedd(x)
-        output = self.pretrain_model(x)
-        projected_output = self.projector(output)
-        return projected_output
-
-
 class GetModel(object):
     def __init__(self):
-        super(GetModel, self).__init__()
-
-        self.model = FineTuneTimeXer(
+        self.model = TimeXer(
             seq_len=84,
             patch_len=12,
             patch_num=7,
             num_variate=325,
             pred_len=12,
-            new_num_variate=10,
             use_norm=True,
             d_model=256,
             num_layers=6,
         )
-
-        # self.model.load_state_dict(torch.load("TimeXer.pth"))
-
+        self.model.load_state_dict(torch.load(model_state_path))
         self.model.eval()
 
-    def predict(self, x):
-        """
-        TESTINGGGG
-        if isinstance(x, torch.Tensor):
-            x = x
-        else:
-            x = torch.tensor(x, dtype=torch.float32)
-
-        x = x.unsqueeze(0)
-        with torch.no_grad():
-            output = self.model(x)
-        """
-
-        return torch.randn(1, 12, 10)  # [1, 12, 10]
+    def predict(self, data):
+        return self.model(data)
