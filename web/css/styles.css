@@ -2,7 +2,13 @@
 @import url('loader.css');
 @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
-@import url('https://fonts.google.com/specimen/Angkor?query=Angkor&display=swap');
+
+@font-face {
+    font-family: 'NatureBeauty';
+    src: url('/assets/NatureBeauty.ttf') format('truetype');
+    font-weight: normal; 
+    font-style: normal;  
+}
 
 .fade-out {
     animation: fadeOut 0.3s forwards;
@@ -51,7 +57,7 @@ body, html {
 }
 
 .welcome-container h1 {
-    font-family: Nafy Angkor, cursive;
+    font-family: 'NatureBeauty', sans-serif;
     font-size: 3rem; 
     font-weight: bold;
     font-weight: 600; 
