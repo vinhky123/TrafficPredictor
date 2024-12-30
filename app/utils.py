@@ -89,7 +89,6 @@ class DataGetter(object):
             # Thêm dữ liệu vào dictionary với key là tên location
             data[location_name] = speeds
 
-        # Chuyển dictionary thành DataFrame
         df = pd.DataFrame(data)
 
         # Lưu DataFrame ra file CSV
@@ -107,7 +106,3 @@ class DataGetter(object):
             {"Name": name}, {"Speed": 1, "_id": 0}, sort=[("_id", -1)]
         )
         return result["Speed"]
-
-
-getter = DataGetter(DBClient())
-getter.get_all_data()
