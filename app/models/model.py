@@ -5,6 +5,10 @@ import os
 
 base_dir = os.getcwd()
 model_state_path = os.path.join(base_dir, "notebook/TimeXer.pth")
+num_valid_columns = 8
+
+attn_mask = torch.ones((325, 325), dtype=torch.bool)
+attn_mask[:, :num_valid_columns] = False
 
 
 class PositionalEmbedding(nn.Module):
@@ -251,4 +255,4 @@ class GetModel(object):
         self.model.eval()
 
     def predict(self, data):
-        return self.model(data)
+        return self.model(data, attn_mask=attn_mask)
