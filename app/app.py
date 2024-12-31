@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from models.model import GetModel
-from utils import DataGetter, Mapping
+from utils import DataGetter, Mapping, DataForModel
 from mongodb.linker import DBClient
 import torch
 from datetime import datetime
@@ -53,21 +53,25 @@ def get_notice():
             history_data = data_getter.get_history_data(coordinate)
             data.append(history_data)
 
-        data = torch.tensor(data, dtype=torch.float32)
-        predict = model.predict(data.T)
-        predict = predict.squeeze(0)  # [1, 12, 10] -> [12, 10]
+        data = torch.tensor(data, dtype=torch.float32).T
+        data = DataForModel(data).data
+
+        predict = model.predict(data)
+        predict = predict.squeeze(0)
         time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         for i, coordinate in enumerate(coordinates):
             collection_name = "Predictions"
             db = client["Traffic"]
+            predict_i = predict[:, i].tolist()
+            predict_i = [round(speed, 2) for speed in predict_i]
 
             collection = db[collection_name]
             collection.insert_one(
                 {
                     "Time": time,
                     "Name": str(mapper.get_location_name(coordinate)),
-                    "Speed": predict[:, i].tolist(),
+                    "Speed": predict_i,
                 }
             )
 
@@ -109,9 +113,14 @@ def predict():
         return jsonify({"error": "Request JSON must have 'location' key"}), 400
 
     coordinates = (data["lat"], data["lng"])
+    speed_data = data_getter.get_current_data(coordinates) * 3.6
+    speed_data = round(speed_data, 2)
+
     predict_speed = data_getter.get_predict_data(coordinates)
 
-    return jsonify({"Predict": predict_speed}), 200
+    reply_data = {"Current": speed_data, "Predict": predict_speed}
+
+    return jsonify(reply_data), 200
 
 
 #####################################################################################################

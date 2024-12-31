@@ -36,7 +36,7 @@ function loadJSONData() {
                     ${location.name} 
                     <br>
                     <button class="marker-button" data-name="${location.name}">
-                        Theo dõi tình hình
+                        Theo dõi tình hình và dự đoán
                     </button>
                 `);
 
@@ -68,23 +68,59 @@ function handleButtonClick(name, lat, lng, marker) {
 	callAPI(lat, lng, (response) => {
 		globalLoader.style.display = "none";
 
+		current = response.Current;
+		predict = response.Predict;
+
 		let content = "";
-		if (response && typeof response === "number") {
-			if (response > 30) {
+		if (response) {
+			if (current > 25) {
 				content = `
                     <br>
-                    Tốc độ trung bình hiện tại là: <strong>${response} km/h</strong>
+                    Tốc độ trung bình hiện tại là: <strong>${current} km/h</strong>
                     <br>
                     <strong style="color: #169325;">Nhanh, có vẻ không kẹt lắm</strong>
+					<br>
                 `;
 			} else {
 				content = `
                     <br>
-                    Tốc độ trung bình hiện tại là: <strong>${response} km/h</strong>
+                    Tốc độ trung bình hiện tại là: <strong>${current} km/h</strong>
                     <br>
-                    <strong style="color: #c93c3c;">Chậm, đừng đi đường này, kẹt rồi!</strong>
+                    <strong style="color: #c93c3c;">Chậm, đường khá đông!</strong>
+					<br>
                 `;
 			}
+
+			const first10 = predict.slice(0, 2);     // 10 phút đầu tiên
+			const next10 = predict.slice(2, 4);     // 10-20 phút
+			const next20 = predict.slice(4, 8);     // 20-40 phút
+			const next40 = predict.slice(8, 12);  // 40-60 phút
+		
+			const averageSpeed = (arr) => arr.reduce((sum, val) => sum + val, 0) / arr.length;
+		
+			// Hàm xác định trạng thái giao thông
+			const status = (avgSpeed) => {
+				if (avgSpeed < 15) return "<strong style='color: #c93c3c'>sẽ kẹt xe!</strong>";
+				if (avgSpeed < 25) return "<strong style='color: #FF8C00'>đường sẽ khá đông</strong>";
+				return "<strong style='color: #169325>sẽ thoáng </strong>";
+			};
+		
+			// Xác định trạng thái từng khoảng
+			const first10Status = status(averageSpeed(first10));
+			const next10Status = status(averageSpeed(next10));
+			const next20Status = status(averageSpeed(next20));
+			const next40Status = status(averageSpeed(next40));
+			
+			content += `
+			        Trong 10 phút tới ${first10Status}, trung bình ${averageSpeed(first10)} km/h </strong>
+					<br>
+					Trong 10-20 phút tới ${next10Status}, trung bình ${averageSpeed(next10)} km/h </strong>
+					<br>
+					Trong 20-40 phút tới ${next20Status}, trung bình ${averageSpeed(next20)} km/h </strong>
+					<br
+					Trong 40-60 phút tới ${next40Status}, trung bình ${averageSpeed(next40)} km/h </strong>
+			`;
+
 		} else {
 			content = `
                 <br>
@@ -98,7 +134,7 @@ function handleButtonClick(name, lat, lng, marker) {
 }
 
 function callAPI(lat, lng, callback) {
-	fetch(HOST + "/current", {
+	fetch(HOST + "/predict", {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
@@ -107,7 +143,7 @@ function callAPI(lat, lng, callback) {
 	})
 		.then((response) => response.json())
 		.then((data) => {
-			callback(data.Current); // Pass response data to the callback
+			callback(data); // Pass response data to the callback
 		})
 		.catch((error) => {
 			console.error("Error fetching data:", error);

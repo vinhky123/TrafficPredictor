@@ -183,7 +183,7 @@ class TimeXer(nn.Module):
         pred_len,
         use_norm=True,
         d_model=256,
-        num_layers=6,
+        num_layers=4,
     ):
         super(TimeXer, self).__init__()
 
@@ -238,16 +238,16 @@ class TimeXer(nn.Module):
 class GetModel(object):
     def __init__(self):
         self.model = TimeXer(
-            seq_len=84,
+            seq_len=96,
             patch_len=12,
-            patch_num=7,
+            patch_num=8,
             num_variate=325,
             pred_len=12,
             use_norm=True,
             d_model=256,
-            num_layers=6,
+            num_layers=4,
         )
-        self.model.load_state_dict(torch.load(model_state_path))
+        self.model.load_state_dict(torch.load(model_state_path, weights_only=True))
         self.model.eval()
 
     def predict(self, data):

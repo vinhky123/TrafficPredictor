@@ -1,5 +1,9 @@
 from mongodb.linker import DBClient
 import pandas as pd
+from sklearn.impute import KNNImputer
+import pywt
+import numpy as np
+import torch
 
 LOCATIONS = {
     (10.798905, 106.726998): "SaiGonBride",
@@ -52,7 +56,7 @@ class DataGetter(object):
         db = self.client["Traffic"]
         collection = db[collection_name]
 
-        results = collection.find({}, {"Speed": 1, "_id": 0}).sort("_id", -1).limit(84)
+        results = collection.find({}, {"Speed": 1, "_id": 0}).sort("_id", -1).limit(96)
         speeds = [record["Speed"] for record in results]
         return speeds
 
@@ -68,14 +72,12 @@ class DataGetter(object):
         locations = self.mapper.get_all_location()
         db = self.client["Traffic"]
 
-        # Dictionary để lưu dữ liệu Speed từ các collection
         data = {}
 
         for location in locations:
             location_name = self.mapper.get_location_name(location)
             collection = db[location_name]
 
-            # Lấy dữ liệu từ mỗi collection
             results = collection.find({}, {"Speed": 1, "_id": 0}).sort("_id", -1)
             speeds = [
                 (
@@ -85,13 +87,10 @@ class DataGetter(object):
                 )
                 for record in results
             ]
-
-            # Thêm dữ liệu vào dictionary với key là tên location
             data[location_name] = speeds
 
         df = pd.DataFrame(data)
 
-        # Lưu DataFrame ra file CSV
         df.to_csv("traffic_data.csv", index=False)
 
         return df
@@ -106,3 +105,41 @@ class DataGetter(object):
             {"Name": name}, {"Speed": 1, "_id": 0}, sort=[("_id", -1)]
         )
         return result["Speed"]
+
+
+class DataForModel(object):
+    def __init__(self, data):
+        self.data = data
+        self.preprocessing()
+
+    def preprocessing(self):
+        data_np = self.data.numpy() * 3.6
+        data_np = np.delete(data_np, [1, -1], axis=1)
+
+        def DWT_preprocess_tensor(data, wavelet="db4", level=1, thresholding="soft"):
+            processed_data = []
+            for col in range(data.shape[1]):
+                signal = data[:, col]
+                coeffs = pywt.wavedec(signal, wavelet, level=level)
+
+                sigma = np.median(np.abs(coeffs[-1])) / 0.6745
+                threshold = sigma * np.sqrt(2 * np.log(len(signal)))
+                coeffs[1:] = [
+                    pywt.threshold(c, threshold, mode=thresholding) for c in coeffs[1:]
+                ]
+
+                denoised_signal = pywt.waverec(coeffs, wavelet)
+                processed_data.append(denoised_signal[: len(signal)])
+
+            return np.column_stack(processed_data)
+
+        data_np = DWT_preprocess_tensor(data_np)
+
+        num_cols_to_add = 325 - data_np.shape[1]
+        if num_cols_to_add > 0:
+            zero_cols = np.zeros((data_np.shape[0], num_cols_to_add))
+            data_np = np.hstack((data_np, zero_cols))
+
+        data_np = np.expand_dims(data_np, axis=0)
+
+        self.data = torch.tensor(data_np, dtype=torch.float32)
