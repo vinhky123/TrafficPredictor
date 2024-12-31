@@ -1,6 +1,5 @@
 from mongodb.linker import DBClient
 import pandas as pd
-from sklearn.impute import KNNImputer
 import pywt
 import numpy as np
 import torch
