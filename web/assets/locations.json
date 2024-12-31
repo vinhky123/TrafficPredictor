@@ -38,10 +38,5 @@
         "name": "Đường Trường Chinh",
         "description": "",
         "coordinates": { "lat": 10.816761, "lng": 106.631952 }
-    },
-    {
-        "name": "Đường Cộng Hòa",
-        "description": "",
-        "coordinates": { "lat": 10.801900, "lng": 106.648617 }
     }
 ]
