@@ -6,7 +6,7 @@
 
 Including the state-of-the-art model with transformer architecture in time series prediction, this is a reliable and modern way to help you
 
-## TimeXer architecture
+# TimeXer architecture
 
 ![TimeXer architecture](/image/timexer_architecture.png)
 
@@ -40,7 +40,7 @@ python3 app.py
 
 But this backend have a .env contain password to my mongodb, maybe you need to create your own database traffic if you wanna run your own app :joy:
 
-## Server architecture
+# Server architecture
 ![Architecture of back end](image/architecture.png)
 
 I have another VM run on ec2 to calling HERE api every 5 mins to get the current traffic to collect them into my mongodb. Because traffic services don't give me historical data so I have to do this :joy:
@@ -53,6 +53,6 @@ There are 8 locations in Ho Chi Minh City I used to get data, maybe you wanna ha
 
 That's all! 
 
-## The very last 
+# The very last speech
 
 A simple project of my team the course Deep Learning for Data Science (DS201) in my University (UIT-VNU)
