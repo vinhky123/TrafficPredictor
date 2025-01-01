@@ -117,7 +117,7 @@ function handleButtonClick(name, lat, lng, marker) {
 					Trong 10-20 phút tới ${next10Status}, trung bình ${averageSpeed(next10)} km/h </strong>
 					<br>
 					Trong 20-40 phút tới ${next20Status}, trung bình ${averageSpeed(next20)} km/h </strong>
-					<br
+					<br>
 					Trong 40-60 phút tới ${next40Status}, trung bình ${averageSpeed(next40)} km/h </strong>
 			`;
 
