@@ -5,3 +5,4 @@ numpy
 pymongo
 python-dotenv
 PyWavelets
+torch
