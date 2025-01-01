@@ -53,4 +53,6 @@ There are 8 locations in Ho Chi Minh City I used to get data, maybe you wanna ha
 
 That's all! 
 
+## The very last 
+
 A simple project of my team the course Deep Learning for Data Science (DS201) in my University (UIT-VNU)
