@@ -49,11 +49,11 @@ body, html {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100%;
+    height: calc(100% - 110px);
 }
 
 .welcome-page {
-    background-image: linear-gradient(to right top, #333333, #4f5057, #69707e, #8093a7, #95b8d1);
+    background-image: linear-gradient(to right top, #9b9898, #b3b1b1, #cbcacb, #e5e4e5, #ffffff);
 }
 
 .welcome-container h1 {
@@ -100,11 +100,12 @@ header h1 {
 
 main {
     width: 100%;
-    height: calc(100% - 110px);
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    background-color: #E5E4E2;
 }
 
 .mapContainer {
