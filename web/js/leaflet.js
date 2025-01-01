@@ -112,13 +112,13 @@ function handleButtonClick(name, lat, lng, marker) {
 			const next40Status = status(averageSpeed(next40));
 			
 			content += `
-			        Trong 10 phút tới ${first10Status}, trung bình ${averageSpeed(first10)} km/h </strong>
+			        Trong 10 phút tới ${first10Status}, trung bình ${Math.round(averageSpeed(first10))} km/h </strong>
 					<br>
-					Trong 10-20 phút tới ${next10Status}, trung bình ${averageSpeed(next10)} km/h </strong>
+					Trong 10-20 phút tới ${next10Status}, trung bình ${Math.round(averageSpeed(next10))} km/h </strong>
 					<br>
-					Trong 20-40 phút tới ${next20Status}, trung bình ${averageSpeed(next20)} km/h </strong>
+					Trong 20-40 phút tới ${next20Status}, trung bình ${Math.round(averageSpeed(next20))} km/h </strong>
 					<br>
-					Trong 40-60 phút tới ${next40Status}, trung bình ${averageSpeed(next40)} km/h </strong>
+					Trong 40-60 phút tới ${next40Status}, trung bình ${Math.round(averageSpeed(next40))} km/h </strong>
 			`;
 
 		} else {
