@@ -4,5 +4,4 @@ pandas
 numpy
 pymongo
 python-dotenv
-torch
 PyWavelets

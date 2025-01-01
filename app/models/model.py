@@ -251,7 +251,7 @@ class GetModel(object):
             d_model=256,
             num_layers=4,
         )
-        self.model.load_state_dict(torch.load(model_state_path, weights_only=True))
+        self.model.load_state_dict(torch.load(model_state_path, map_location=torch.device('cpu'), weights_only=True))
         self.model.eval()
 
     def predict(self, data):
