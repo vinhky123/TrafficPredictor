@@ -1,5 +1,5 @@
 var map = L.map("map").setView([10.795376, 106.661339], 12);
-HOST = "https://vinhkyyy.duckdns.org/";
+HOST = "http://172.16.0.69:5000";
 
 var tileLayer = L.tileLayer(
 	"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -73,6 +73,7 @@ function handleButtonClick(name, lat, lng, marker) {
 
 		let content = "";
 		if (response) {
+			console.log(response);
 			if (current > 25) {
 				content = `
                     <br>
@@ -100,9 +101,11 @@ function handleButtonClick(name, lat, lng, marker) {
 		
 			// Hàm xác định trạng thái giao thông
 			const status = (avgSpeed) => {
-				if (avgSpeed < 15) return "<strong style='color: #c93c3c'>sẽ kẹt xe!</strong>";
-				if (avgSpeed < 25) return "<strong style='color: #FF8C00'>đường sẽ khá đông</strong>";
-				return "<strong style='color: #169325>sẽ thoáng </strong>";
+				if (avgSpeed < 15) 
+					return "<strong style='color: #c93c3c'>sẽ kẹt xe!</strong>";
+				if (avgSpeed < 25) 
+				return "<strong style='color: #FF8C00'>sẽ đông</strong>";
+				return "<strong style='color: #169325'>sẽ thoáng</strong>";
 			};
 		
 			// Xác định trạng thái từng khoảng
@@ -112,13 +115,13 @@ function handleButtonClick(name, lat, lng, marker) {
 			const next40Status = status(averageSpeed(next40));
 			
 			content += `
-			        Trong 10 phút tới ${first10Status}, trung bình ${Math.round(averageSpeed(first10))} km/h </strong>
+			        10 phút tới ${first10Status}, trung bình ${Math.round(averageSpeed(first10))} km/h </strong>
 					<br>
-					Trong 10-20 phút tới ${next10Status}, trung bình ${Math.round(averageSpeed(next10))} km/h </strong>
+					10-20 phút tới ${next10Status}, trung bình ${Math.round(averageSpeed(next10))} km/h </strong>
 					<br>
-					Trong 20-40 phút tới ${next20Status}, trung bình ${Math.round(averageSpeed(next20))} km/h </strong>
+					20-40 phút tới ${next20Status}, trung bình ${Math.round(averageSpeed(next20))} km/h </strong>
 					<br>
-					Trong 40-60 phút tới ${next40Status}, trung bình ${Math.round(averageSpeed(next40))} km/h </strong>
+					40-60 phút tới ${next40Status}, trung bình ${Math.round(averageSpeed(next40))} km/h </strong>
 			`;
 
 		} else {

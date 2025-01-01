@@ -6,7 +6,7 @@ import torch
 
 LOCATIONS = {
     (10.798905, 106.726998): "SaiGonBride",
-    (10.849319, 106.773959): "TD_Crossroads",
+    #    (10.849319, 106.773959): "TD_Crossroads",
     (10.813187, 106.756803): "RachChiec_Bridge",
     (10.793411, 106.700390): "DBP_Bridge",
     (10.772122, 106.657589): "BKU",
@@ -14,12 +14,12 @@ LOCATIONS = {
     (10.777923, 106.681344): "DanChu_Roundabout",
     (10.785456, 106.663261): "LeThiRieng_Park",
     (10.816761, 106.631952): "TruongChinh_Street",
-    (10.801900, 106.648617): "CongHoa_Street",
+    #    (10.801900, 106.648617): "CongHoa_Street",
 }
 
 NAME = [
     "SaiGonBride",
-    "TD_Crossroads",
+    #    "TD_Crossroads",
     "RachChiec_Bridge",
     "DBP_Bridge",
     "BKU",
@@ -27,7 +27,7 @@ NAME = [
     "DanChu_Roundabout",
     "LeThiRieng_Park",
     "TruongChinh_Street",
-    "CongHoa_Street",
+    #    "CongHoa_Street",
 ]
 
 
@@ -98,6 +98,7 @@ class DataGetter(object):
         collection_name = "Predictions"
         db = self.client["Traffic"]
         collection = db[collection_name]
+
         name = self.mapper.get_location_name(location)
 
         result = collection.find_one(
@@ -113,7 +114,6 @@ class DataForModel(object):
 
     def preprocessing(self):
         data_np = self.data.numpy() * 3.6
-        data_np = np.delete(data_np, [1, -1], axis=1)
 
         def DWT_preprocess_tensor(data, wavelet="db4", level=1, thresholding="soft"):
             processed_data = []

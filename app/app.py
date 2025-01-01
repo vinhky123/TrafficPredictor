@@ -54,6 +54,7 @@ def get_notice():
             data.append(history_data)
 
         data = torch.tensor(data, dtype=torch.float32).T
+
         data = DataForModel(data).data
 
         predict = model.predict(data)
@@ -94,6 +95,7 @@ def current():
         return jsonify({"error": "Request JSON must have 'location' key"}), 400
 
     coordinates = (data["lat"], data["lng"])
+
     speed_data = data_getter.get_current_data(coordinates) * 3.6
     speed_data = round(speed_data, 2)
 
@@ -113,16 +115,17 @@ def predict():
         return jsonify({"error": "Request JSON must have 'location' key"}), 400
 
     coordinates = (data["lat"], data["lng"])
+    name_coord = mapper.get_location_name(coordinates)
     speed_data = data_getter.get_current_data(coordinates) * 3.6
     speed_data = round(speed_data, 2)
 
     predict_speed = data_getter.get_predict_data(coordinates)
 
-    reply_data = {"Current": speed_data, "Predict": predict_speed}
+    reply_data = {"Name": name_coord, "Current": speed_data, "Predict": predict_speed}
 
     return jsonify(reply_data), 200
 
 
 #####################################################################################################
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    app.run(host="0.0.0.0", port=5000, debug=True)
