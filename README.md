@@ -56,3 +56,5 @@ That's all!
 # The very last speech
 
 A simple project of my team the course Deep Learning for Data Science (DS201) in my University (UIT-VNU)
+
+Due to the financial burden, the server was offline now. The demo video is at ![Google Drive](https://drive.google.com/file/d/1mamEGHzSNm7dcN8Vu6hDZNIEtI02sKzh/view?usp=sharing)
