@@ -51,12 +51,13 @@ Each time users wanna know will there be a traffic jam, the server just has to g
 
 There are 8 locations in Ho Chi Minh City I used to get data, maybe you wanna have a look in ```/web/assets/locations.json```. Unfortunately, Thu Duc Crossway location makes the API confuse so it can not fetch Thu Duc Cross Way correctly
 
-Our reports in Vietnamese: [Report](Report.pdf)
+
 
 That's all! 
 
 # The very last speech
 
 A simple project of my team the course Deep Learning for Data Science (DS201) in my University (UIT-VNU)
+Our reports in Vietnamese: [Report](Report.pdf)
 
 Due to the financial burden, the server was offline now. The demo video is at [Google Drive](https://drive.google.com/file/d/1mamEGHzSNm7dcN8Vu6hDZNIEtI02sKzh/view?usp=sharing)
