@@ -44,7 +44,7 @@ But this backend have a .env contain password to my mongodb, maybe you need to c
 
 # Server architecture
 
-![Architecture of back end](image/Pipeline data.svg)
+![Architecture of back end](image/Pipeline_data.svg)
 
 I have another VM run on ec2 to calling HERE api every 5 mins to get the current traffic to collect them into my mongodb. Because traffic services don't give me historical data so I have to do this :joy:
 
