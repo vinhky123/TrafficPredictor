@@ -40,25 +40,17 @@ pip3 install -r requirements.txt
 python3 app.py
 ```
 
-But this backend have a .env contain password to my mongodb, maybe you need to create your own database traffic if you wanna run your own app :joy:
-
 # Server architecture
 
 ![Architecture of back end](image/Pipeline_data.svg)
 
-I have another VM run on ec2 to calling HERE api every 5 mins to get the current traffic to collect them into my mongodb. Because traffic services don't give me historical data so I have to do this :joy:
-
-After called the API and got data, this VM make a request to the server like 'Hey, come and make prediction, you got new data'. And the server makes predictions base on state-of-the-art transformer-based model in time series prediction (TimeXer) and store in database.
-
-Each time users wanna know will there be a traffic jam, the server just has to get the data in the prediction section in database to reduce waiting time of users.
-
-There are 8 locations in Ho Chi Minh City I used to get data, maybe you wanna have a look in `/web/assets/locations.json`. Unfortunately, Thu Duc Crossway location makes the API confuse so it can not fetch Thu Duc Cross Way correctly
+ETL Pipeline is implemented with Airflow for data orchestrating. Firstly, extract data from an API source. The data then be processed with Pyspark for big data processing. Then loaded into S3 Bucket. When new data is added, S3 bucket notification event trigger to call to AWS Lambda. Lambda get the newest data, feed them into Kafka topic for batch streaming to server.
 
 That's all!
 
 # The very last speech
 
-A simple project of my team the course Deep Learning for Data Science (DS201) in my University (UIT-VNU)
+A simple project of my team the course Deep Learning for Data Science (DS201) and Big data (DS200) in my University (UIT-VNU)
 
 Our reports in Vietnamese: [Report](Report.pdf)
 
