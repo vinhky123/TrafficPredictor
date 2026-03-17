@@ -1,8 +1,0 @@
-Flask
-flask_cors
-pandas
-numpy
-pymongo
-python-dotenv
-PyWavelets
-torch

@@ -1,57 +1,50 @@
-# Traffic Predictor
+# TrafficPredictor (Portfolio Refactor)
 
-An applications to help you avoid traffic jams in Viet Nam
+This repository is a **portfolio-style refactor** of the original TrafficPredictor project: clean monorepo layout, modern frontend, layered backend, and an Airflow ETL orchestration design.
 
-## A reliable prediction for your trip
+The goal is to be **beautiful + “production-shaped”** (readable, maintainable, well-structured). It does not need to be fully runnable end-to-end.
 
-Including the state-of-the-art model with transformer architecture in time series prediction, this is a reliable and modern way to help you
+## Repository layout
 
-# TimeXer architecture
+- **Backend**: `backend/` (Flask API with routes/services/repositories)
+- **Frontend**: `frontend/` (React + Vite; map UI + dashboard)
+- **ETL Orchestration**: `airflow/` (Airflow DAGs; cloud-ready structure)
+- **Legacy reference**: `frontend/public/legacy-web/` and `airflow/legacy-etl/`
 
-![TimeXer architecture](/image/timexer_architecture.png)
+## Architecture overview
 
-This is the model I used in this project. The TimeXer model learns both the covariation from exogenous and endogenous through Attention with a global parameter that help the model makes a better prediction
-
-## Front end
-
-Basic front end built with html, css, js is hosted at [Vercel](https://traffic-predictor-one.vercel.app/) inside the web folder. I used the free open source Leaflet that help me create a map and custome it. And it totally FREEE
-
-# Back end
-
-A Flask made back end is in the folder app. To run this back end, you will need to
-
-```bash
-cd app
-pip install -r requirements.txt
+```mermaid
+flowchart LR
+  FE[Frontend] -->|"/api/*"| BE[Backend]
+  AF[Airflow_DAG] --> EXT[Extract]
+  EXT --> TR[Transform]
+  TR --> LD[Load]
+  LD --> PR[Predict]
+  PR --> BE
 ```
 
-Then
+## Backend (Flask)
 
-```bash
-cd app
-python app.py
-```
+- Entry module: `backend/app/app.py`
+- API base path: `/api`
+  - `POST /api/current`
+  - `POST /api/predict`
+  - `POST /api/db_notice`
+- Health check: `GET /health`
 
-Or if you are a MacOS, Linux user (like me)
+## Frontend (React)
 
-```bash
-cd app
-pip3 install -r requirements.txt
-python3 app.py
-```
+- App lives in `frontend/`
+- Config via env:
+  - Copy `frontend/.env.example` → `frontend/.env`
+  - Set `VITE_API_URL=http://localhost:5000`
 
-# Server architecture
+## Airflow (ETL)
 
-![Architecture of back end](image/Pipeline_data.svg)
+- DAGs live in `airflow/dags/`
+- Main demo DAG: `airflow/dags/traffic_etl_dag.py`
 
-ETL Pipeline is implemented with Airflow for data orchestrating. Firstly, extract data from an API source. The data then be processed with Pyspark for big data processing. Then loaded into S3 Bucket. When new data is added, S3 bucket notification event trigger to call to AWS Lambda. Lambda get the newest data, feed them into Kafka topic for batch streaming to server.
+## Assets / report
 
-That's all!
-
-# The very last speech
-
-A simple project of my team the course Deep Learning for Data Science (DS201) and Big data (DS200) in my University (UIT-VNU)
-
-Our reports in Vietnamese: [Report](Report.pdf)
-
-Due to the financial burden, the server was offline now. The demo video is at [Google Drive](https://drive.google.com/file/d/1mamEGHzSNm7dcN8Vu6hDZNIEtI02sKzh/view?usp=sharing)
+- Report: `Report.pdf`
+- Images: `image/`
