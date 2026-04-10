@@ -43,26 +43,6 @@ class Mapping:
         return list(LOCATIONS.keys())
 
 
-class DataGetter(object):
-    """
-    Legacy DB helper (kept for compatibility).
-
-    The refactored code uses `repositories.MongoRepository` instead.
-    """
-
-    def __init__(self, client):
-        self.mapper = Mapping()
-        self.client = client
-
-    def get_current_data(self, location):
-        collection_name = self.mapper.get_location_name(location)
-        db = self.client["Traffic"]
-        collection = db[collection_name]
-
-        result = collection.find_one({}, {"Speed": 1, "_id": 0}, sort=[("_id", -1)])
-        return result["Speed"] if result else None
-
-
 class DataForModel(object):
     def __init__(self, data):
         self.data = data

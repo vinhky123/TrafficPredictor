@@ -1,8 +1,10 @@
-import { useMemo, useState } from "react";
-import { ChevronRight, Search, WifiOff } from "lucide-react";
+"use client";
 
-import type { LocationItem, PredictResponse } from "../types";
-import { postPredict } from "../lib/api";
+import { useMemo, useState } from "react";
+import { ChevronRight, Search } from "lucide-react";
+
+import type { LocationItem, PredictResponse } from "@/lib/types";
+import { postPredict } from "@/lib/api";
 
 type Props = {
   locations: LocationItem[];
@@ -11,12 +13,22 @@ type Props = {
 };
 
 function speedBadge(speed?: number) {
-  if (speed == null || Number.isNaN(speed)) {
+  if (speed == null || Number.isNaN(speed))
     return { label: "—", cls: "bg-white/5 text-zinc-200 ring-white/10" };
-  }
-  if (speed < 15) return { label: `${speed} km/h`, cls: "bg-rose-500/15 text-rose-200 ring-rose-500/30" };
-  if (speed < 25) return { label: `${speed} km/h`, cls: "bg-amber-500/15 text-amber-200 ring-amber-500/30" };
-  return { label: `${speed} km/h`, cls: "bg-emerald-500/15 text-emerald-200 ring-emerald-500/30" };
+  if (speed < 15)
+    return {
+      label: `${speed} km/h`,
+      cls: "bg-rose-500/15 text-rose-200 ring-rose-500/30",
+    };
+  if (speed < 25)
+    return {
+      label: `${speed} km/h`,
+      cls: "bg-amber-500/15 text-amber-200 ring-amber-500/30",
+    };
+  return {
+    label: `${speed} km/h`,
+    cls: "bg-emerald-500/15 text-emerald-200 ring-emerald-500/30",
+  };
 }
 
 export function Sidebar({ locations, active, onSelect }: Props) {
@@ -86,11 +98,11 @@ export function Sidebar({ locations, active, onSelect }: Props) {
             </button>
           );
         })}
-        {filtered.length === 0 ? (
+        {filtered.length === 0 && (
           <div className="rounded-xl border border-white/10 bg-zinc-950/30 p-4 text-sm text-zinc-400">
             No locations found.
           </div>
-        ) : null}
+        )}
       </div>
 
       <div className="rounded-2xl border border-white/10 bg-zinc-950/30 p-4">
@@ -101,38 +113,34 @@ export function Sidebar({ locations, active, onSelect }: Props) {
               {active?.name || "—"}
             </div>
           </div>
-          <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs ring-1 ${badge.cls}`}>
+          <span
+            className={`inline-flex items-center rounded-full px-3 py-1 text-xs ring-1 ${badge.cls}`}
+          >
             {badge.label}
           </span>
         </div>
 
-        <div className="mt-3 flex gap-2">
+        <div className="mt-3">
           <button
             disabled={!active || loading}
             onClick={() => active && runPredict(active)}
-            className="inline-flex flex-1 items-center justify-center rounded-xl bg-cyan-400/15 px-3 py-2 text-sm font-medium text-cyan-200 ring-1 ring-cyan-400/30 transition hover:bg-cyan-400/20 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex w-full items-center justify-center rounded-xl bg-cyan-400/15 px-3 py-2 text-sm font-medium text-cyan-200 ring-1 ring-cyan-400/30 transition hover:bg-cyan-400/20 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? "Fetching…" : "Fetch forecast"}
           </button>
-          <a
-            href="/legacy-web/index.html"
-            className="inline-flex items-center justify-center rounded-xl bg-white/5 px-3 py-2 text-sm text-zinc-200 ring-1 ring-white/10"
-            title="Legacy UI is kept under /legacy-web"
-          >
-            <WifiOff className="h-4 w-4" />
-          </a>
         </div>
 
-        {data?.error ? (
+        {data?.error && (
           <div className="mt-3 rounded-xl border border-rose-500/20 bg-rose-500/10 p-3 text-xs text-rose-200">
             {data.error}
             <div className="mt-1 text-[11px] text-rose-200/70">
-              Set <code className="rounded bg-black/30 px-1">VITE_API_URL</code> to connect the API.
+              Set <code className="rounded bg-black/30 px-1">NEXT_PUBLIC_API_URL</code> to
+              connect the API.
             </div>
           </div>
-        ) : null}
+        )}
 
-        {data?.predict?.length ? (
+        {data?.predict && data.predict.length > 0 && (
           <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
             <div className="rounded-xl border border-white/10 bg-white/5 p-3">
               <div className="text-zinc-400">Next 10 min</div>
@@ -143,13 +151,16 @@ export function Sidebar({ locations, active, onSelect }: Props) {
             <div className="rounded-xl border border-white/10 bg-white/5 p-3">
               <div className="text-zinc-400">Next 60 min</div>
               <div className="mt-1 text-sm font-semibold">
-                {Math.round(data.predict.reduce((a, b) => a + b, 0) / data.predict.length)} km/h
+                {Math.round(
+                  data.predict.reduce((a, b) => a + b, 0) /
+                    data.predict.length,
+                )}{" "}
+                km/h
               </div>
             </div>
           </div>
-        ) : null}
+        )}
       </div>
     </aside>
   );
 }
-

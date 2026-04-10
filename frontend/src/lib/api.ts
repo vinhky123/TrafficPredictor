@@ -1,10 +1,13 @@
-import type { PredictResponse } from "../types";
+import type { PredictResponse } from "./types";
 
-const API_URL = import.meta.env.VITE_API_URL as string | undefined;
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export async function postPredict(lat: number, lng: number): Promise<PredictResponse> {
+export async function postPredict(
+  lat: number,
+  lng: number,
+): Promise<PredictResponse> {
   if (!API_URL) {
-    return { error: "Missing VITE_API_URL (demo mode)" };
+    return { error: "NEXT_PUBLIC_API_URL is not configured (demo mode)." };
   }
 
   const res = await fetch(`${API_URL}/api/predict`, {
@@ -17,4 +20,3 @@ export async function postPredict(lat: number, lng: number): Promise<PredictResp
   if (!res.ok) return { ...json, error: json.error || `HTTP ${res.status}` };
   return json;
 }
-

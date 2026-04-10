@@ -23,6 +23,20 @@ node_modules/
 dist/
 dist-ssr/
 *.local
+.next/
+out/
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+*.tfplan
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
 
 # Editor
 .vscode/
