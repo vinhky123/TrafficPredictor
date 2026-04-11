@@ -7,7 +7,7 @@ export async function postPredict(
   lng: number,
 ): Promise<PredictResponse> {
   if (!API_URL) {
-    return { speed: 0, error: "Backend not available" };
+    return { error: "Backend not available" };
   }
 
   try {
@@ -19,12 +19,12 @@ export async function postPredict(
     });
 
     if (!res.ok) {
-      return { speed: 0, error: `HTTP ${res.status}` };
+      return { error: `HTTP ${res.status}` };
     }
 
     const json = (await res.json().catch(() => ({}))) as PredictResponse;
     return json;
-  } catch (error) {
-    return { speed: 0, error: "Connection failed" };
+  } catch {
+    return { error: "Connection failed" };
   }
 }
