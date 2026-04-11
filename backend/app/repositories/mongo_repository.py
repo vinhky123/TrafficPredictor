@@ -16,31 +16,43 @@ class MongoRepository:
         client = MongoClient(uri, server_api=ServerApi("1"), maxPoolSize=max_pool_size)
         return MongoRepository(client=client, db_name=db_name)
 
-    def get_latest_speed(self, location_collection: str) -> float | None:
+    def get_latest_speed(self, segment_index: int) -> float | None:
         db = self.client[self.db_name]
-        collection = db[location_collection]
-        result = collection.find_one({}, {"Speed": 1, "_id": 0}, sort=[("_id", -1)])
+        result = db["SpeedRecords"].find_one(
+            {"segment_index": segment_index},
+            {"Speed": 1, "_id": 0},
+            sort=[("_id", -1)],
+        )
         if not result:
             return None
         return result.get("Speed")
 
-    def get_recent_speeds(self, location_collection: str, limit: int = 96) -> list[float]:
+    def get_recent_speeds(self, segment_index: int, limit: int = 96) -> list[float]:
         db = self.client[self.db_name]
-        collection = db[location_collection]
-        results = collection.find({}, {"Speed": 1, "_id": 0}).sort("_id", -1).limit(limit)
-        return [record.get("Speed") for record in results if record.get("Speed") is not None]
+        results = (
+            db["SpeedRecords"]
+            .find({"segment_index": segment_index}, {"Speed": 1, "_id": 0})
+            .sort("_id", -1)
+            .limit(limit)
+        )
+        return [r["Speed"] for r in results if r.get("Speed") is not None]
 
-    def get_latest_prediction(self, name: str) -> list[float] | None:
+    def get_latest_prediction(self, segment_index: int) -> list[float] | None:
         db = self.client[self.db_name]
-        collection = db["Predictions"]
-        result = collection.find_one({"Name": name}, {"Speed": 1, "_id": 0}, sort=[("_id", -1)])
+        result = db["Predictions"].find_one(
+            {"segment_index": segment_index},
+            {"Speed": 1, "_id": 0},
+            sort=[("_id", -1)],
+        )
         if not result:
             return None
         speeds = result.get("Speed")
         return speeds if isinstance(speeds, list) else None
 
-    def insert_prediction(self, time: str, name: str, speeds: list[float]) -> None:
+    def insert_prediction(self, time: str, segment_index: int, speeds: list[float]) -> None:
         db = self.client[self.db_name]
-        collection = db["Predictions"]
-        collection.insert_one({"Time": time, "Name": name, "Speed": speeds})
-
+        db["Predictions"].insert_one({
+            "Time": time,
+            "segment_index": segment_index,
+            "Speed": speeds,
+        })

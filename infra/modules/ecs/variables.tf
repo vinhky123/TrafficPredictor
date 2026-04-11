@@ -37,3 +37,15 @@ variable "mongodb_uri" {
   type      = string
   sensitive = true
 }
+
+variable "dynamodb_table" {
+  type = string
+}
+
+variable "dynamodb_arn" {
+  type = string
+}
+
+variable "dynamodb_gsi_arn" {
+  type = string
+}

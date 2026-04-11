@@ -32,3 +32,8 @@ output "mwaa_webserver_url" {
   description = "MWAA Airflow webserver URL"
   value       = module.mwaa.webserver_url
 }
+
+output "dynamodb_table" {
+  description = "DynamoDB road segments table name"
+  value       = module.dynamodb.table_name
+}

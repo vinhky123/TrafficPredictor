@@ -18,3 +18,11 @@ variable "environment_class" {
   type    = string
   default = "mw1.small"
 }
+
+variable "dynamodb_arn" {
+  type = string
+}
+
+variable "dynamodb_gsi_arn" {
+  type = string
+}

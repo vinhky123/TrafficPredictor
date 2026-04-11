@@ -42,6 +42,17 @@ data "aws_iam_policy_document" "mwaa_policy" {
 
   statement {
     actions = [
+      "dynamodb:GetItem",
+      "dynamodb:PutItem",
+      "dynamodb:UpdateItem",
+      "dynamodb:Query",
+      "dynamodb:Scan",
+    ]
+    resources = [var.dynamodb_arn, var.dynamodb_gsi_arn]
+  }
+
+  statement {
+    actions = [
       "sqs:*",
       "kms:Decrypt",
       "kms:DescribeKey",

@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { Activity, MapPin, Zap } from "lucide-react";
 
 import { Sidebar } from "@/components/sidebar";
-import type { LocationItem } from "@/lib/types";
+import { fetchSegments } from "@/lib/api";
+import type { RoadSegment } from "@/lib/types";
 
 const MapPanel = dynamic(() => import("@/components/map-panel"), {
   ssr: false,
@@ -16,21 +17,27 @@ const MapPanel = dynamic(() => import("@/components/map-panel"), {
   ),
 });
 
+const HCMC_CENTER: [number, number] = [10.776889, 106.695278];
+
 export default function Home() {
-  const [locations, setLocations] = useState<LocationItem[]>([]);
-  const [active, setActive] = useState<LocationItem | null>(null);
+  const [segments, setSegments] = useState<RoadSegment[]>([]);
+  const [active, setActive] = useState<RoadSegment | null>(null);
 
   useEffect(() => {
-    fetch("/locations.json")
-      .then((r) => r.json())
-      .then((data: LocationItem[]) => setLocations(data))
-      .catch(() => setLocations([]));
+    fetchSegments().then(setSegments).catch(() => setSegments([]));
   }, []);
 
   const center = useMemo<[number, number]>(() => {
-    if (active) return [active.coordinates.lat, active.coordinates.lng];
-    return [10.795376, 106.661339];
+    if (!active || !active.shape.length) return HCMC_CENTER;
+    const lats = active.shape.map((p) => p.lat);
+    const lngs = active.shape.map((p) => p.lng);
+    return [
+      (Math.min(...lats) + Math.max(...lats)) / 2,
+      (Math.min(...lngs) + Math.max(...lngs)) / 2,
+    ];
   }, [active]);
+
+  const handleSelect = useCallback((seg: RoadSegment) => setActive(seg), []);
 
   return (
     <>
@@ -47,7 +54,7 @@ export default function Home() {
                 Traffic Predictor
               </div>
               <div className="text-xs text-zinc-400">
-                Ho Chi Minh City traffic snapshot + forecast
+                Ho Chi Minh City road segment speed + forecast
               </div>
             </div>
           </div>
@@ -59,15 +66,20 @@ export default function Home() {
             </span>
             <span className="inline-flex items-center gap-1 rounded-full bg-white/5 px-3 py-1 ring-1 ring-white/10">
               <Activity className="h-3.5 w-3.5" />
-              API-ready
+              {segments.length} segments
             </span>
           </div>
         </div>
       </header>
 
       <main className="relative z-10 mx-auto grid h-[calc(100%-73px)] max-w-7xl grid-cols-1 gap-4 px-4 py-4 lg:grid-cols-[380px_1fr]">
-        <Sidebar locations={locations} active={active} onSelect={setActive} />
-        <MapPanel locations={locations} active={active} center={center} />
+        <Sidebar segments={segments} active={active} onSelect={handleSelect} />
+        <MapPanel
+          segments={segments}
+          active={active}
+          center={center}
+          onSelect={handleSelect}
+        />
       </main>
     </>
   );

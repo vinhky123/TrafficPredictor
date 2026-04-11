@@ -36,6 +36,24 @@ resource "aws_iam_role" "task" {
   assume_role_policy = data.aws_iam_policy_document.ecs_assume.json
 }
 
+resource "aws_iam_role_policy" "task_dynamodb" {
+  name = "${var.name_prefix}-task-dynamodb"
+  role = aws_iam_role.task.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Action = [
+        "dynamodb:GetItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+      ]
+      Resource = [var.dynamodb_arn, var.dynamodb_gsi_arn]
+    }]
+  })
+}
+
 # ── Security groups ────────────────────────────────────────────────────────
 
 resource "aws_security_group" "alb" {
@@ -149,6 +167,7 @@ resource "aws_ecs_task_definition" "backend" {
     environment = [
       { name = "MONGODB_URI", value = var.mongodb_uri },
       { name = "MONGODB_DB_NAME", value = "Traffic" },
+      { name = "DYNAMODB_TABLE", value = var.dynamodb_table },
     ]
     logConfiguration = {
       logDriver = "awslogs"

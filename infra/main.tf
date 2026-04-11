@@ -42,20 +42,31 @@ module "documentdb" {
   master_password   = var.docdb_master_password
 }
 
+# ── DynamoDB (Road Segment Registry) ───────────────────────────────────────
+
+module "dynamodb" {
+  source = "./modules/dynamodb"
+
+  name_prefix = local.name_prefix
+}
+
 # ── ECS (Backend) ──────────────────────────────────────────────────────────
 
 module "ecs" {
   source = "./modules/ecs"
 
-  name_prefix     = local.name_prefix
-  vpc_id          = module.networking.vpc_id
-  public_subnets  = module.networking.public_subnet_ids
-  private_subnets = module.networking.private_subnet_ids
-  ecr_repo_url    = module.ecr.backend_repo_url
-  cpu             = var.backend_cpu
-  memory          = var.backend_memory
-  desired_count   = var.backend_desired_count
-  mongodb_uri     = module.documentdb.connection_string
+  name_prefix      = local.name_prefix
+  vpc_id           = module.networking.vpc_id
+  public_subnets   = module.networking.public_subnet_ids
+  private_subnets  = module.networking.private_subnet_ids
+  ecr_repo_url     = module.ecr.backend_repo_url
+  cpu              = var.backend_cpu
+  memory           = var.backend_memory
+  desired_count    = var.backend_desired_count
+  mongodb_uri      = module.documentdb.connection_string
+  dynamodb_table   = module.dynamodb.table_name
+  dynamodb_arn     = module.dynamodb.table_arn
+  dynamodb_gsi_arn = module.dynamodb.gsi_arn
 }
 
 # ── MWAA (Managed Airflow) ─────────────────────────────────────────────────
@@ -68,4 +79,6 @@ module "mwaa" {
   private_subnets   = module.networking.private_subnet_ids
   dag_s3_bucket     = module.s3.dag_bucket_name
   environment_class = var.mwaa_environment_class
+  dynamodb_arn      = module.dynamodb.table_arn
+  dynamodb_gsi_arn  = module.dynamodb.gsi_arn
 }
