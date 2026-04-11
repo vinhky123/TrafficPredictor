@@ -41,6 +41,6 @@ Open `http://localhost:3000`.
 
 1. Push to GitHub.
 2. Import the repo on [vercel.com](https://vercel.com).
-3. Set **Root Directory** to `frontend`.
+3. Set **Root Directory** to `web` (the Next.js app lives in this folder, not the repo root).
 4. Set environment variable `NEXT_PUBLIC_API_URL` to your backend URL.
 5. Deploy.

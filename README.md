@@ -66,7 +66,7 @@ flowchart LR
 ```
 TrafficPredictor/
 ├── backend/          # Flask REST API + TimeXer inference
-├── frontend/         # Next.js dashboard with Leaflet map
+├── web/              # Next.js dashboard with Leaflet map
 ├── airflow/          # Airflow DAGs + custom operators for ETL
 ├── infra/            # Terraform modules (VPC, ECS, MWAA, DocumentDB, S3)
 ├── docs/             # Architecture docs + API reference
@@ -86,7 +86,7 @@ Each component has its own README with detailed setup instructions:
 ### Prerequisites
 
 - Docker & Docker Compose
-- Node.js 20+ (for frontend)
+- Node.js 20+ (for the web dashboard)
 
 ### 1. Start Backend + Airflow (Docker)
 
@@ -101,7 +101,7 @@ docker compose up -d
 ### 2. Start Frontend (local)
 
 ```bash
-cd frontend
+cd web
 cp .env.example .env.local
 npm install
 npm run dev
