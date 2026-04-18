@@ -49,3 +49,33 @@ Thumbs.db
 *.njsproj
 *.sln
 
+.aider*
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Coverage reports
+.coverage
+htmlcov/
+coverage.xml
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+*.code-workspace
+
+# Pre-commit
+.pre-commit-config.cache
+
+# Docker
+*.tar
+
+# Temporary files
+*.tmp
+*.bak

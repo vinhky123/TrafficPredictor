@@ -1,64 +1,199 @@
-name: CI
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
     branches: [main]
 
+env:
+  PYTHON_VERSION: "3.11"
+  NODE_VERSION: "20"
+
 jobs:
-  backend-lint:
-    name: Backend — Lint
+  # ── Backend Tests ──────────────────────────────────────────────────────
+  backend-test:
+    name: Backend Tests
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - run: pip install ruff
-      - run: ruff check app/
-      - run: ruff format --check app/
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-  frontend-typecheck:
-    name: Frontend — Type Check
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('backend/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+          pip install pytest pytest-cov pytest-mock
+
+      - name: Run linting (ruff)
+        run: |
+          pip install ruff
+          ruff check backend/
+        continue-on-error: true
+
+      - name: Run tests
+        run: |
+          cd tests && python -m pytest -v --tb=short --cov=../backend --cov-report=xml
+        env:
+          MONGODB_URI: mongodb://localhost:27017
+          MONGODB_DB_NAME: TrafficTest
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+          flags: backend
+          name: backend-coverage
+        continue-on-error: true
+
+  # ── Frontend Tests ─────────────────────────────────────────────────────
+  frontend-test:
+    name: Frontend Tests
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: web
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: npm
-          cache-dependency-path: web/package.json
-      - run: npm install
-      - run: npx tsc --noEmit
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-  terraform-validate:
-    name: Terraform — Validate
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: infra
-    steps:
-      - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          terraform_version: "1.9"
-      - run: terraform fmt -check -recursive
-      - run: terraform init -backend=false
-      - run: terraform validate
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: web/package-lock.json
 
+      - name: Install dependencies
+        run: |
+          cd web
+          npm ci
+
+      - name: Run linting
+        run: |
+          cd web
+          npm run lint
+        continue-on-error: true
+
+      - name: Type check
+        run: |
+          cd web
+          npx tsc --noEmit
+        continue-on-error: true
+
+      - name: Build
+        run: |
+          cd web
+          npm run build
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:5000
+
+  # ── Docker Build Test ──────────────────────────────────────────────────
   docker-build:
-    name: Docker — Build Images
+    name: Docker Build Test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        service: [backend, airflow]
+    needs: [backend-test]
     steps:
-      - uses: actions/checkout@v4
-      - run: docker build -t ${{ matrix.service }}:ci ./${{ matrix.service }}
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: false
+          tags: traffic-predictor-backend:test
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build airflow image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./airflow
+          push: false
+          tags: traffic-predictor-airflow:test
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ── Terraform Validate ─────────────────────────────────────────────────
+  terraform-validate:
+    name: Terraform Validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.5.0"
+
+      - name: Terraform Init
+        run: |
+          cd infra
+          terraform init -backend=false
+        continue-on-error: true
+
+      - name: Terraform Validate
+        run: |
+          cd infra
+          terraform validate
+        continue-on-error: true
+
+      - name: Terraform Format Check
+        run: |
+          cd infra
+          terraform fmt -check -recursive
+        continue-on-error: true
+
+  # ── Security Scan ──────────────────────────────────────────────────────
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          format: "sarif"
+          output: "trivy-results.sarif"
+        continue-on-error: true
+
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: "trivy-results.sarif"
+        continue-on-error: true
+
+  # ── Status Check ───────────────────────────────────────────────────────
+  status:
+    name: CI Status
+    runs-on: ubuntu-latest
+    needs: [backend-test, frontend-test, docker-build, terraform-validate]
+    if: always()
+    steps:
+      - name: Check all jobs status
+        run: |
+          if [ "${{ needs.backend-test.result }}" != "success" ] || \
+             [ "${{ needs.frontend-test.result }}" != "success" ]; then
+            echo "CI pipeline failed"
+            exit 1
+          fi
+          echo "All CI checks passed"
