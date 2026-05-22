@@ -104,8 +104,7 @@ module = [
     "flask_cors.*",
     "pywt.*",
     "torch.*",
-    "pyspark.*",
-    "pendulum.*",
+    "aws_lambda_wsgi.*",
 ]
 ignore_missing_imports = true
 

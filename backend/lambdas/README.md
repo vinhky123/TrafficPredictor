@@ -6,11 +6,14 @@ This directory contains AWS Lambda handlers for the serverless ETL pipeline and 
 
 ```
 lambdas/
-├── extract.py      # Fetches traffic data from HERE API, stores raw JSON in S3
-├── transform.py    # Parses raw flow data, computes speed, enriches metadata
-├── load.py         # Upserts transformed records into DynamoDB
-├── predict.py      # Runs TimeXer inference, stores forecasts in DynamoDB
-└── handler.py      # API Gateway entry point (wraps Flask via aws-lambda-wsgi)
+├── api/             # API Gateway entry point (wraps Flask via aws-lambda-wsgi)
+├── extract/         # Fetches traffic data from HERE API, stores raw JSON in S3
+├── transform/       # Parses raw flow data, computes speed, enriches metadata
+├── load/            # Upserts transformed records into DynamoDB
+├── predict/         # Runs TimeXer inference, stores forecasts in DynamoDB
+├── notify/          # SNS-triggered SSE broadcast to connected clients
+├── sse-connect/     # SSE endpoint connection handler
+└── websocket/       # WebSocket connect/disconnect handlers
 ```
 
 ## Pipeline
