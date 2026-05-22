@@ -41,13 +41,6 @@ resource "aws_lambda_function" "this" {
     }
   }
 
-  dynamic "image_config" {
-    for_each = var.package_type == "Container" && var.image_uri != null ? [true] : []
-    content {
-      # command and entrypoint can be added if needed
-    }
-  }
-
   image_uri = var.package_type == "Container" ? var.image_uri : null
   handler   = var.package_type == "Zip" ? var.handler : null
   runtime   = var.package_type == "Zip" ? var.runtime : null
