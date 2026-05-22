@@ -6,13 +6,13 @@ from datetime import datetime
 import torch
 
 from ..models.timexer_model import TimeXerModel
-from ..repositories.mongo_repository import MongoRepository
+from ..repositories.dynamodb_repository import DynamoDBRepository
 from ..utils import DataForModel, SegmentMapping
 
 
 @dataclass(frozen=True)
 class PredictionService:
-    repo: MongoRepository
+    repo: DynamoDBRepository
     mapper: SegmentMapping
     model: TimeXerModel
 

@@ -1,6 +1,6 @@
 # API Reference
 
-Base URL: `http://localhost:5000` (local) or the ALB DNS from Terraform output.
+Base URL: `http://localhost:5000` (local) or the API Gateway URL from Terraform output.
 
 ## Endpoints
 
@@ -119,33 +119,10 @@ Each value in `predict` is the forecasted speed in km/h for the next 5-minute wi
 
 ---
 
-### Trigger Batch Prediction
-
-```
-POST /api/db_notice
-```
-
-Triggers the backend to fetch the latest 96 time-steps for all registered road segments, run batch TimeXer inference, and store predictions in the database. Typically called by the Airflow pipeline after new data is loaded.
-
-**Request Body**
-
-```json
-{
-  "notice": "update"
-}
-```
-
-**Response** `200 OK`
-
-```json
-{
-  "notice": "Updating DB and predicting",
-  "inserted": 142
-}
-```
-
----
-
 ## Road Segments
 
-Road segments are dynamically registered by the ETL pipeline. Each segment is identified by a `segment_index` (integer) stored in DynamoDB. The API no longer uses fixed lat/lng coordinates -- use `GET /api/segments` to discover available segments and their shapes.
+Road segments are dynamically registered by the ETL pipeline. Each segment is identified by a `segment_index` (integer) stored in DynamoDB. Use `GET /api/segments` to discover available segments and their shapes.
+
+## Real-time Updates
+
+The frontend receives live speed and prediction updates via Server-Sent Events (SSE). The SSE endpoint streams events whenever new data is processed by the Step Functions pipeline.

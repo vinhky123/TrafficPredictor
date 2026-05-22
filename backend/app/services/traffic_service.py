@@ -2,13 +2,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from ..repositories.mongo_repository import MongoRepository
+from ..repositories.dynamodb_repository import DynamoDBRepository
 from ..utils import SegmentMapping
 
 
 @dataclass(frozen=True)
 class TrafficService:
-    repo: MongoRepository
+    repo: DynamoDBRepository
     mapper: SegmentMapping
 
     def get_current_speed_kmh(self, segment_index: int) -> float | None:
