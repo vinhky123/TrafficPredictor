@@ -27,6 +27,21 @@ variable "filename" {
   default = null
 }
 
+variable "s3_bucket" {
+  type    = string
+  default = null
+}
+
+variable "s3_key" {
+  type    = string
+  default = null
+}
+
+variable "s3_object_version" {
+  type    = string
+  default = null
+}
+
 variable "package_type" {
   type    = string
   default = "Zip"
