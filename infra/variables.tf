@@ -38,3 +38,19 @@ variable "here_api_key" {
   sensitive   = true
   default     = ""
 }
+
+# ── Telegram ──────────────────────────────────────────────────────────────
+
+variable "telegram_bot_token" {
+  description = "Telegram Bot API token for pipeline notifications"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "telegram_chat_id" {
+  description = "Telegram chat ID for pipeline notifications"
+  type        = string
+  sensitive   = true
+  default     = ""
+}

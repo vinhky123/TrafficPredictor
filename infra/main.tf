@@ -258,6 +258,29 @@ module "sse_api" {
   lambda_invoke_arn = module.lambda_notify.invoke_arn
 }
 
+# ── Lambda: Telegram Notifications ─────────────────────────────────────────
+
+module "lambda_telegram" {
+  source = "./modules/lambda-function"
+
+  function_name = "${local.name_prefix}-notify-telegram"
+  handler       = "index.handler"
+  runtime       = "python3.12"
+  memory_size   = 128
+  timeout       = 10
+  s3_bucket     = module.s3.lambdas_bucket_name
+  s3_key        = "notify-telegram/function.zip"
+
+  policies = [
+    local.basic_policy_arn,
+  ]
+
+  environment_variables = {
+    TELEGRAM_BOT_TOKEN = var.telegram_bot_token
+    TELEGRAM_CHAT_ID   = var.telegram_chat_id
+  }
+}
+
 # ── Step Function ─────────────────────────────────────────────────────────
 
 resource "aws_iam_role" "step_function" {
@@ -290,7 +313,9 @@ resource "aws_iam_policy" "step_function" {
           module.lambda_extract.function_arn,
           module.lambda_transform.function_arn,
           module.lambda_load.function_arn,
+          module.lambda_predict.function_arn,
           module.lambda_notify.function_arn,
+          module.lambda_telegram.function_arn,
         ]
       }
     ]
@@ -304,12 +329,13 @@ resource "aws_iam_role_policy_attachment" "step_function" {
 
 locals {
   step_function_definition = jsonencode({
-    Comment = "Traffic Data ETL Pipeline"
+    Comment = "Traffic Data ETL Pipeline with Telegram alerts"
     StartAt = "Extract"
     States = {
       Extract = {
         Type     = "Task"
         Resource = module.lambda_extract.function_arn
+        ResultPath = "$.extract"
         Next     = "Transform"
         Retry = [
           {
@@ -319,10 +345,22 @@ locals {
             BackoffRate     = 2
           }
         ]
+        Catch = [
+          {
+            ErrorEquals = ["States.ALL"]
+            ResultPath  = "$.error"
+            Next        = "NotifyFailure"
+          }
+        ]
       }
       Transform = {
         Type     = "Task"
         Resource = module.lambda_transform.function_arn
+        Parameters = {
+          "raw_bucket.$" = "$.extract.bucket"
+          "raw_key.$"    = "$.extract.key"
+        }
+        ResultPath = "$.transform"
         Next     = "Load"
         Retry = [
           {
@@ -332,10 +370,43 @@ locals {
             BackoffRate     = 2
           }
         ]
+        Catch = [
+          {
+            ErrorEquals = ["States.ALL"]
+            ResultPath  = "$.error"
+            Next        = "NotifyFailure"
+          }
+        ]
       }
       Load = {
         Type     = "Task"
         Resource = module.lambda_load.function_arn
+        Parameters = {
+          "processed_bucket.$" = "$.transform.bucket"
+          "processed_key.$"    = "$.transform.key"
+        }
+        ResultPath = "$.load"
+        Next     = "Predict"
+        Retry = [
+          {
+            ErrorEquals     = ["Lambda.ServiceException", "Lambda.AWSLambdaException", "Lambda.SdkClientException", "States.TaskFailed"]
+            IntervalSeconds = 2
+            MaxAttempts     = 3
+            BackoffRate     = 2
+          }
+        ]
+        Catch = [
+          {
+            ErrorEquals = ["States.ALL"]
+            ResultPath  = "$.error"
+            Next        = "NotifyFailure"
+          }
+        ]
+      }
+      Predict = {
+        Type     = "Task"
+        Resource = module.lambda_predict.function_arn
+        ResultPath = "$.predict"
         Next     = "Notify"
         Retry = [
           {
@@ -345,11 +416,22 @@ locals {
             BackoffRate     = 2
           }
         ]
+        Catch = [
+          {
+            ErrorEquals = ["States.ALL"]
+            ResultPath  = "$.error"
+            Next        = "NotifyFailure"
+          }
+        ]
       }
       Notify = {
         Type     = "Task"
         Resource = module.lambda_notify.function_arn
-        End      = true
+        Parameters = {
+          "action"        = "etl_complete"
+          "load_result.$" = "$.load"
+        }
+        Next = "NotifySuccess"
         Retry = [
           {
             ErrorEquals     = ["Lambda.ServiceException", "Lambda.AWSLambdaException", "Lambda.SdkClientException", "States.TaskFailed"]
@@ -358,6 +440,41 @@ locals {
             BackoffRate     = 2
           }
         ]
+        Catch = [
+          {
+            ErrorEquals = ["States.ALL"]
+            ResultPath  = "$.error"
+            Next        = "NotifyFailure"
+          }
+        ]
+      }
+      NotifySuccess = {
+        Type     = "Task"
+        Resource = module.lambda_telegram.function_arn
+        Parameters = {
+          "type"      = "success"
+          "pipeline"  = "Traffic ETL"
+          "timestamp.$" = "$$.Execution.StartTime"
+          "counts" = {
+            "extracted.$"  = "$.extract.results_count"
+            "transformed.$" = "$.transform.count"
+            "loaded.$"     = "$.load.inserted"
+          }
+        }
+        End = true
+      }
+      NotifyFailure = {
+        Type     = "Task"
+        Resource = module.lambda_telegram.function_arn
+        Parameters = {
+          "type"       = "failure"
+          "pipeline"   = "Traffic ETL"
+          "timestamp.$" = "$$.Execution.StartTime"
+          "state.$"    = "$$.State.Name"
+          "error.$"    = "$.error.Error"
+          "cause.$"    = "$.error.Cause"
+        }
+        End = true
       }
     }
   })

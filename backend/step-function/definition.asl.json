@@ -1,12 +1,19 @@
 {
-  "Comment": "Traffic ETL Pipeline",
+  "Comment": "Traffic ETL Pipeline with Telegram notifications",
   "StartAt": "Extract",
   "States": {
     "Extract": {
       "Type": "Task",
       "Resource": "${ExtractLambdaArn}",
       "ResultPath": "$.extract",
-      "Next": "Transform"
+      "Next": "Transform",
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "ResultPath": "$.error",
+          "Next": "NotifyFailure"
+        }
+      ]
     },
     "Transform": {
       "Type": "Task",
@@ -16,7 +23,14 @@
         "raw_key.$": "$.extract.key"
       },
       "ResultPath": "$.transform",
-      "Next": "Load"
+      "Next": "Load",
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "ResultPath": "$.error",
+          "Next": "NotifyFailure"
+        }
+      ]
     },
     "Load": {
       "Type": "Task",
@@ -26,7 +40,27 @@
         "processed_key.$": "$.transform.key"
       },
       "ResultPath": "$.load",
-      "Next": "Notify"
+      "Next": "Predict",
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "ResultPath": "$.error",
+          "Next": "NotifyFailure"
+        }
+      ]
+    },
+    "Predict": {
+      "Type": "Task",
+      "Resource": "${PredictLambdaArn}",
+      "ResultPath": "$.predict",
+      "Next": "Notify",
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "ResultPath": "$.error",
+          "Next": "NotifyFailure"
+        }
+      ]
     },
     "Notify": {
       "Type": "Task",
@@ -34,6 +68,41 @@
       "Parameters": {
         "action": "etl_complete",
         "load_result.$": "$.load"
+      },
+      "Next": "NotifySuccess",
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "ResultPath": "$.error",
+          "Next": "NotifyFailure"
+        }
+      ]
+    },
+    "NotifySuccess": {
+      "Type": "Task",
+      "Resource": "${TelegramLambdaArn}",
+      "Parameters": {
+        "type": "success",
+        "pipeline": "Traffic ETL",
+        "timestamp.$": "$$.Execution.StartTime",
+        "counts": {
+          "extracted.$": "$.extract.results_count",
+          "transformed.$": "$.transform.count",
+          "loaded.$": "$.load.inserted"
+        }
+      },
+      "End": true
+    },
+    "NotifyFailure": {
+      "Type": "Task",
+      "Resource": "${TelegramLambdaArn}",
+      "Parameters": {
+        "type": "failure",
+        "pipeline": "Traffic ETL",
+        "timestamp.$": "$$.Execution.StartTime",
+        "state.$": "$$.State.Name",
+        "error.$": "$.error.Error",
+        "cause.$": "$.error.Cause"
       },
       "End": true
     }
