@@ -1,220 +1,280 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" version="24.7.8">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0" version="24.7.8">
   <diagram id="traffic-predictor" name="Architecture">
-    <mxGraphModel dx="1500" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
       <root>
         <mxCell id="0"/>
         <mxCell id="1" parent="0"/>
 
         <!-- Title -->
-        <mxCell id="title" value="TrafficPredictor — Architecture" style="text;html=1;fontSize=20;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="320" y="10" width="500" height="40"/>
+        <mxCell id="t" value="&lt;b&gt;TrafficPredictor Architecture&lt;/b&gt;" style="text;html=1;fontSize=22;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="500" y="10" width="600" height="40"/>
         </mxCell>
 
-        <!-- === Section: External === -->
-        <mxCell id="section-external" value="External" style="swimlane;whiteSpace=wrap;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottomOrRight=0;rounded=1;shadow=0;strokeColor=#666666;fillColor=#F5F5F5;fontColor=#333333;" parent="1" vertex="1">
-          <mxGeometry x="40" y="60" width="220" height="200"/>
+        <!-- === External Section Background === -->
+        <mxCell id="ext-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;strokeWidth=2;dashed=0;verticalAlign=top;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="30" y="70" width="240" height="270"/>
+        </mxCell>
+        <mxCell id="ext-label" value="&lt;b&gt;External&lt;/b&gt;" style="text;html=1;fontSize=14;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="75" width="220" height="25"/>
         </mxCell>
 
-        <mxCell id="here-api" value="HERE Traffic Flow API" style="shape=process;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#FF6B35;fillColor=#FFF0E8;fontColor=#333333;" parent="section-external" vertex="1">
-          <mxGeometry x="10" y="30" width="200" height="50"/>
+        <!-- HERE API -->
+        <mxCell id="here" value="HERE Traffic Flow API" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;strokeColor=#FF6B35;fillColor=#FFF0E8;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="50" y="110" width="200" height="50"/>
         </mxCell>
 
-        <mxCell id="browser" value="Browser (User)" style="shape=actor;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#333333;fillColor=#E8E8E8;fontColor=#333333;" parent="section-external" vertex="1">
-          <mxGeometry x="10" y="100" width="200" height="50"/>
+        <!-- Browser -->
+        <mxCell id="browser" value="Browser (User)" style="shape=actor;whiteSpace=wrap;html=1;shadow=1;strokeColor=#333333;fillColor=#E8E8E8;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="80" y="180" width="140" height="50"/>
         </mxCell>
 
-        <mxCell id="vercel" value="Vercel (Next.js)" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;strokeColor=#000000;fillColor=#FFFFFF;fontColor=#333333;" parent="section-external" vertex="1">
-          <mxGeometry x="10" y="170" width="200" height="50"/>
+        <!-- Vercel -->
+        <mxCell id="vercel" value="Vercel (Next.js)" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;strokeColor=#000000;fillColor=#FFFFFF;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="50" y="260" width="200" height="50"/>
         </mxCell>
 
-        <!-- === Section: AWS Cloud === -->
-        <mxCell id="section-aws" value="AWS Cloud" style="swimlane;whiteSpace=wrap;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottomOrRight=0;rounded=1;shadow=0;strokeColor=#FF9900;fillColor=#FFF8E7;fontColor=#333333;" parent="1" vertex="1">
-          <mxGeometry x="320" y="60" width="720" height="780"/>
+        <!-- === AWS Cloud Section Background === -->
+        <mxCell id="aws-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF8E7;strokeColor=#FF9900;strokeWidth=2;dashed=0;verticalAlign=top;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="320" y="70" width="1200" height="820"/>
+        </mxCell>
+        <mxCell id="aws-label" value="&lt;b&gt;AWS Cloud&lt;/b&gt;" style="text;html=1;fontSize=14;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="770" y="75" width="300" height="25"/>
         </mxCell>
 
-        <!-- Sub-section: API Layer -->
-        <mxCell id="section-api" value="API Layer" style="swimlane;whiteSpace=wrap;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottomOrRight=0;rounded=1;shadow=0;strokeColor=#1A73E8;fillColor=#E8F0FE;" parent="section-aws" vertex="1">
-          <mxGeometry x="20" y="30" width="680" height="130"/>
+        <!-- === API Layer === -->
+        <mxCell id="api-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#1A73E8;strokeWidth=1;dashed=0;verticalAlign=top;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="340" y="110" width="1160" height="130"/>
+        </mxCell>
+        <mxCell id="api-label" value="API Layer" style="text;html=1;fontSize=13;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="800" y="112" width="240" height="22"/>
         </mxCell>
 
-        <mxCell id="api-gw" value="API Gateway REST" style="shape=cylinder3;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#1A73E8;fillColor=#D2E3FC;fontColor=#333333;" parent="section-api" vertex="1">
-          <mxGeometry x="30" y="35" width="150" height="50"/>
+        <mxCell id="api-gw" value="API Gateway REST" style="shape=cylinder3;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#1A73E8;fillColor=#D2E3FC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="370" y="155" width="160" height="55"/>
         </mxCell>
 
-        <mxCell id="lambda-api" value="Lambda: REST API
-(Flask + aws-lambda-wsgi)" style="shape=process;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#1A73E8;fillColor=#D2E3FC;fontColor=#333333;" parent="section-api" vertex="1">
-          <mxGeometry x="250" y="35" width="180" height="50"/>
+        <mxCell id="lambda-api" value="Lambda: REST API&#xa;(Flask + aws-lambda-wsgi)" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;strokeColor=#1A73E8;fillColor=#D2E3FC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="640" y="155" width="200" height="55"/>
         </mxCell>
 
-        <mxCell id="lambda-sse" value="Lambda: SSE Broadcast" style="shape=process;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#1A73E8;fillColor=#D2E3FC;fontColor=#333333;" parent="section-api" vertex="1">
-          <mxGeometry x="490" y="35" width="160" height="50"/>
+        <mxCell id="lambda-sse" value="Lambda: SSE Broadcast" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;strokeColor=#1A73E8;fillColor=#D2E3FC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="950" y="155" width="190" height="55"/>
         </mxCell>
 
-        <!-- Sub-section: ETL Pipeline -->
-        <mxCell id="section-etl" value="ETL Pipeline (Step Function)" style="swimlane;whiteSpace=wrap;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottomOrRight=0;rounded=1;shadow=0;strokeColor=#E37400;fillColor=#FFF0D0;" parent="section-aws" vertex="1">
-          <mxGeometry x="20" y="190" width="680" height="350"/>
+        <!-- === ETL Pipeline === -->
+        <mxCell id="etl-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF0D0;strokeColor=#E37400;strokeWidth=1;dashed=0;verticalAlign=top;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="340" y="260" width="1160" height="350"/>
+        </mxCell>
+        <mxCell id="etl-label" value="ETL Pipeline (Step Function)" style="text;html=1;fontSize=13;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="770" y="262" width="300" height="22"/>
         </mxCell>
 
-        <mxCell id="eventbridge" value="EventBridge
-(*/5 * * * *)" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;strokeColor=#E37400;fillColor=#FFE0B0;fontColor=#333333;fontSize=11;" parent="section-etl" vertex="1">
-          <mxGeometry x="30" y="35" width="130" height="40"/>
+        <!-- Schedule -->
+        <mxCell id="ev" value="EventBridge&#xa;*/5 * * * *" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;strokeColor=#E37400;fillColor=#FFE0B0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="370" y="310" width="140" height="45"/>
         </mxCell>
 
-        <mxCell id="step-function" value="Step Function
-ETL Pipeline" style="shape=process;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#E37400;fillColor=#FFE0B0;fontColor=#333333;fontSize=12;" parent="section-etl" vertex="1">
-          <mxGeometry x="30" y="95" width="130" height="40"/>
+        <!-- Step Function -->
+        <mxCell id="sf" value="Step Function&#xa;State Machine" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;strokeColor=#E37400;fillColor=#FFE0B0;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="370" y="390" width="140" height="55"/>
         </mxCell>
 
-        <!-- Step Function States -->
-        <mxCell id="sf-extract" value="Extract" style="shape=parallelogram;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#E37400;fillColor=#FFF0D0;fontColor=#333333;" parent="section-etl" vertex="1">
-          <mxGeometry x="230" y="35" width="120" height="40"/>
+        <!-- Lambda: Extract -->
+        <mxCell id="l-extract" value="Lambda: Extract&#xa;HERE API to S3" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;strokeColor=#E37400;fillColor=#FFE0B0;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="590" y="305" width="170" height="45"/>
         </mxCell>
 
-        <mxCell id="sf-transform" value="Transform" style="shape=parallelogram;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#E37400;fillColor=#FFF0D0;fontColor=#333333;" parent="section-etl" vertex="1">
-          <mxGeometry x="230" y="105" width="120" height="40"/>
+        <mxCell id="sf-extract" value="Extract" style="shape=parallelogram;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#E37400;fillColor=#FFE0B0;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="810" y="305" width="120" height="45"/>
         </mxCell>
 
-        <mxCell id="sf-load" value="Load" style="shape=parallelogram;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#E37400;fillColor=#FFF0D0;fontColor=#333333;" parent="section-etl" vertex="1">
-          <mxGeometry x="230" y="175" width="120" height="40"/>
+        <!-- Lambda: Transform -->
+        <mxCell id="l-transform" value="Lambda: Transform&#xa;Parse &amp;rarr; Register &amp;rarr; JSONL" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;strokeColor=#E37400;fillColor=#FFE0B0;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="590" y="380" width="170" height="45"/>
         </mxCell>
 
-        <mxCell id="sf-predict" value="Predict
-(TimeXer)" style="shape=parallelogram;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#E37400;fillColor=#FFF0D0;fontColor=#333333;" parent="section-etl" vertex="1">
-          <mxGeometry x="230" y="245" width="120" height="40"/>
+        <mxCell id="sf-transform" value="Transform" style="shape=parallelogram;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#E37400;fillColor=#FFE0B0;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="810" y="380" width="120" height="45"/>
         </mxCell>
 
-        <!-- Lambda Functions (ETL) -->
-        <mxCell id="lambda-extract" value="Lambda: Extract
-HERE API → S3" style="shape=process;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#E37400;fillColor=#FFF0D0;fontColor=#333333;" parent="section-etl" vertex="1">
-          <mxGeometry x="420" y="35" width="160" height="40"/>
+        <!-- Lambda: Load -->
+        <mxCell id="l-load" value="Lambda: Load&#xa;JSONL to DynamoDB" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;strokeColor=#E37400;fillColor=#FFE0B0;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="590" y="455" width="170" height="45"/>
         </mxCell>
 
-        <mxCell id="lambda-transform" value="Lambda: Transform
-Parse → Register → JSONL" style="shape=process;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#E37400;fillColor=#FFF0D0;fontColor=#333333;" parent="section-etl" vertex="1">
-          <mxGeometry x="420" y="105" width="160" height="40"/>
+        <mxCell id="sf-load" value="Load" style="shape=parallelogram;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#E37400;fillColor=#FFE0B0;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="810" y="455" width="120" height="45"/>
         </mxCell>
 
-        <mxCell id="lambda-load" value="Lambda: Load
-JSONL → DynamoDB" style="shape=process;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#E37400;fillColor=#FFF0D0;fontColor=#333333;" parent="section-etl" vertex="1">
-          <mxGeometry x="420" y="175" width="160" height="40"/>
+        <!-- Lambda: Predict -->
+        <mxCell id="l-predict" value="Lambda: Predict&#xa;PyTorch (Container)" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;strokeColor=#E37400;fillColor=#FFE0B0;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="590" y="530" width="170" height="45"/>
         </mxCell>
 
-        <mxCell id="lambda-predict" value="Lambda: Predict
-PyTorch (Container)" style="shape=process;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#E37400;fillColor=#FFF0D0;fontColor=#333333;" parent="section-etl" vertex="1">
-          <mxGeometry x="420" y="245" width="160" height="40"/>
+        <mxCell id="sf-predict" value="Predict (TimeXer)" style="shape=parallelogram;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#E37400;fillColor=#FFE0B0;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="810" y="530" width="140" height="45"/>
         </mxCell>
 
-        <!-- Sub-section: Storage -->
-        <mxCell id="section-storage" value="Storage" style="swimlane;whiteSpace=wrap;html=1;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottomOrRight=0;rounded=1;shadow=0;strokeColor=#1B5E20;fillColor=#E8F5E9;" parent="section-aws" vertex="1">
-          <mxGeometry x="20" y="570" width="680" height="190"/>
+        <!-- === Storage === -->
+        <mxCell id="st-bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#1B5E20;strokeWidth=1;dashed=0;verticalAlign=top;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="340" y="630" width="1160" height="240"/>
+        </mxCell>
+        <mxCell id="st-label" value="Storage" style="text;html=1;fontSize=13;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="800" y="632" width="240" height="22"/>
         </mxCell>
 
-        <mxCell id="dynamo-segments" value="DynamoDB
-Segments
-PK: shape_hash" style="shape=cylinder3;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#1B5E20;fillColor=#C8E6C9;fontColor=#333333;" parent="section-storage" vertex="1">
-          <mxGeometry x="30" y="35" width="140" height="50"/>
+        <mxCell id="d1" value="DynamoDB&#xa;Segments&#xa;PK: shape_hash" style="shape=cylinder3;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#1B5E20;fillColor=#C8E6C9;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="370" y="670" width="160" height="60"/>
         </mxCell>
 
-        <mxCell id="dynamo-speeds" value="DynamoDB
-Speeds (time-series)
-PK: seg_idx SK: ts" style="shape=cylinder3;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#1B5E20;fillColor=#C8E6C9;fontColor=#333333;" parent="section-storage" vertex="1">
-          <mxGeometry x="200" y="35" width="140" height="50"/>
+        <mxCell id="d2" value="DynamoDB&#xa;Speeds (time-series)&#xa;PK: seg SK: ts" style="shape=cylinder3;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#1B5E20;fillColor=#C8E6C9;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="580" y="670" width="160" height="60"/>
         </mxCell>
 
-        <mxCell id="dynamo-predictions" value="DynamoDB
-Predictions (time-series)
-PK: seg_idx SK: ts" style="shape=cylinder3;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#1B5E20;fillColor=#C8E6C9;fontColor=#333333;" parent="section-storage" vertex="1">
-          <mxGeometry x="370" y="35" width="140" height="50"/>
+        <mxCell id="d3" value="DynamoDB&#xa;Predictions (time-series)&#xa;PK: seg SK: ts" style="shape=cylinder3;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#1B5E20;fillColor=#C8E6C9;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="790" y="670" width="160" height="60"/>
         </mxCell>
 
-        <mxCell id="dynamo-connections" value="DynamoDB
-WS Connections
-PK: connection_id" style="shape=cylinder3;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#1B5E20;fillColor=#C8E6C9;fontColor=#333333;" parent="section-storage" vertex="1">
-          <mxGeometry x="30" y="110" width="140" height="50"/>
+        <mxCell id="d4" value="DynamoDB&#xa;WS Connections&#xa;PK: connection_id" style="shape=cylinder3;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#1B5E20;fillColor=#C8E6C9;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="370" y="760" width="160" height="60"/>
         </mxCell>
 
-        <mxCell id="s3-raw" value="S3 (Raw)
-HERE JSON" style="shape=cylinder3;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#1B5E20;fillColor=#C8E6C9;fontColor=#333333;" parent="section-storage" vertex="1">
-          <mxGeometry x="200" y="110" width="140" height="50"/>
+        <mxCell id="s3r" value="S3 (Raw)&#xa;HERE JSON" style="shape=cylinder3;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#1B5E20;fillColor=#C8E6C9;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="580" y="760" width="160" height="60"/>
         </mxCell>
 
-        <mxCell id="s3-processed" value="S3 (Processed)
-JSONL" style="shape=cylinder3;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#1B5E20;fillColor=#C8E6C9;fontColor=#333333;" parent="section-storage" vertex="1">
-          <mxGeometry x="370" y="110" width="140" height="50"/>
+        <mxCell id="s3p" value="S3 (Processed)&#xa;JSONL" style="shape=cylinder3;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#1B5E20;fillColor=#C8E6C9;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="790" y="760" width="160" height="60"/>
         </mxCell>
 
-        <!-- SNS -->
-        <mxCell id="sns" value="SNS Topic
-pipeline-notifications" style="shape=ellipse;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#C62828;fillColor=#FFCDD2;fontColor=#333333;" parent="section-aws" vertex="1">
-          <mxGeometry x="600" y="610" width="90" height="50"/>
+        <mxCell id="sns" value="SNS Topic" style="ellipse;whiteSpace=wrap;html=1;rounded=1;shadow=1;strokeColor=#C62828;fillColor=#FFCDD2;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="690" width="120" height="50"/>
         </mxCell>
 
-        <!-- === Arrows === -->
+        <!-- === ARROWS === -->
 
-        <!-- HERE → Extract -->
-        <mxCell id="arrow-here-extract" value="HTTP GET /v7/flow" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#FF6B35;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="here-api" target="sf-extract" edge="1">
+        <!-- HERE -> Extract Lambda -->
+        <mxCell id="a1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#FF6B35;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="here" target="l-extract" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a1l" value="HTTP GET" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connect="1" parent="a1">
+          <mxGeometry x="-0.3" y="-1" relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- EventBridge -> Step Function -->
+        <mxCell id="a2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E37400;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="ev" target="sf" parent="1">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
 
-        <!-- Extract → Transform -->
-        <mxCell id="arrow-extract-transform" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E37400;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="sf-extract" target="sf-transform" edge="1">
+        <!-- Step Function -> Extract -->
+        <mxCell id="a3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E37400;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="sf" target="l-extract" parent="1">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
 
-        <!-- Transform → Load -->
-        <mxCell id="arrow-transform-load" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E37400;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="sf-transform" target="sf-load" edge="1">
+        <!-- Extract -> Extract State -->
+        <mxCell id="a4" value="invokes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E37400;strokeWidth=1;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="l-extract" target="sf-extract" parent="1">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
 
-        <!-- Load → Predict -->
-        <mxCell id="arrow-load-predict" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E37400;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="sf-load" target="sf-predict" edge="1">
+        <!-- Extract -> Transform -->
+        <mxCell id="a5" value="&amp;gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E37400;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="sf-extract" target="sf-transform" parent="1">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
 
-        <!-- Step Function → Lambdas -->
-        <mxCell id="arrow-sf-extract-lambda" value="invokes" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E37400;strokeWidth=1;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="sf-extract" target="lambda-extract" edge="1"/>
-        <mxCell id="arrow-sf-transform-lambda" value="invokes" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E37400;strokeWidth=1;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="sf-transform" target="lambda-transform" edge="1"/>
-        <mxCell id="arrow-sf-load-lambda" value="invokes" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E37400;strokeWidth=1;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="sf-load" target="lambda-load" edge="1"/>
-        <mxCell id="arrow-sf-predict-lambda" value="invokes" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E37400;strokeWidth=1;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="sf-predict" target="lambda-predict" edge="1"/>
-
-        <!-- Lambda → Storage arrows -->
-        <mxCell id="arrow-extract-s3" value="writes" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1B5E20;strokeWidth=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="lambda-extract" target="s3-raw" edge="1"/>
-        <mxCell id="arrow-transform-segments" value="register" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1B5E20;strokeWidth=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="lambda-transform" target="dynamo-segments" edge="1"/>
-        <mxCell id="arrow-transform-s3" value="writes" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1B5E20;strokeWidth=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="lambda-transform" target="s3-processed" edge="1"/>
-        <mxCell id="arrow-load-s3-processed" value="reads" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1B5E20;strokeWidth=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="lambda-load" target="s3-processed" edge="1"/>
-        <mxCell id="arrow-load-speeds" value="batch write" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1B5E20;strokeWidth=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="lambda-load" target="dynamo-speeds" edge="1"/>
-        <mxCell id="arrow-predict-speeds" value="reads recent" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1B5E20;strokeWidth=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="lambda-predict" target="dynamo-speeds" edge="1"/>
-        <mxCell id="arrow-predict-predictions" value="writes" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1B5E20;strokeWidth=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="lambda-predict" target="dynamo-predictions" edge="1"/>
-
-        <!-- Predict → SNS -->
-        <mxCell id="arrow-predict-sns" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#C62828;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="sf-predict" target="sns" edge="1">
+        <!-- Transform -> Transform Lambda -->
+        <mxCell id="a6" value="invokes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E37400;strokeWidth=1;dashed=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="sf-transform" target="l-transform" parent="1">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
 
-        <!-- SNS → SSE Lambda -->
-        <mxCell id="arrow-sns-sse" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#C62828;strokeWidth=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="sns" target="lambda-sse" edge="1"/>
-
-        <!-- Vercel → API Gateway -->
-        <mxCell id="arrow-vercel-api" value="REST API (HTTPS)" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1A73E8;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="vercel" target="api-gw" edge="1"/>
-
-        <!-- API GW → Lambda -->
-        <mxCell id="arrow-api-gw-lambda" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1A73E8;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="api-gw" target="lambda-api" edge="1"/>
-
-        <!-- Lambda API → DynamoDB arrows -->
-        <mxCell id="arrow-api-dynamo-segments" value="read" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1B5E20;strokeWidth=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="lambda-api" target="dynamo-segments" edge="1"/>
-        <mxCell id="arrow-api-dynamo-speeds" value="read" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1B5E20;strokeWidth=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="lambda-api" target="dynamo-speeds" edge="1"/>
-        <mxCell id="arrow-api-dynamo-predictions" value="read" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1B5E20;strokeWidth=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="lambda-api" target="dynamo-predictions" edge="1"/>
-
-        <!-- SSE → Vercel -->
-        <mxCell id="arrow-sse-vercel" value="SSE" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#C62828;strokeWidth=2;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="lambda-sse" target="vercel" edge="1">
+        <!-- Transform -> Load -->
+        <mxCell id="a7" value="&amp;gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E37400;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="sf-transform" target="sf-load" parent="1">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
 
-        <!-- EventBridge → Step Function -->
-        <mxCell id="arrow-ev-sf" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E37400;strokeWidth=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="eventbridge" target="step-function" edge="1"/>
+        <!-- Load -> Load Lambda -->
+        <mxCell id="a8" value="invokes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E37400;strokeWidth=1;dashed=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="sf-load" target="l-load" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
 
-        <!-- Step Function → First state -->
-        <mxCell id="arrow-sf-start" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E37400;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="step-function" target="sf-extract" edge="1"/>
+        <!-- Load -> Predict -->
+        <mxCell id="a9" value="&amp;gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E37400;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="sf-load" target="sf-predict" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Predict -> Predict Lambda -->
+        <mxCell id="a10" value="invokes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E37400;strokeWidth=1;dashed=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="sf-predict" target="l-predict" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Extract -> S3 Raw -->
+        <mxCell id="a11" value="writes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1B5E20;strokeWidth=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="l-extract" target="s3r" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Transform -> Segments -->
+        <mxCell id="a12" value="register" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1B5E20;strokeWidth=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="l-transform" target="d1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Transform -> S3 Processed -->
+        <mxCell id="a13" value="writes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1B5E20;strokeWidth=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="l-load" target="s3p" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Load -> Speeds -->
+        <mxCell id="a14" value="writes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1B5E20;strokeWidth=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="l-load" target="d2" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Predict -> Speeds (reads) -->
+        <mxCell id="a15" value="reads recent" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1B5E20;strokeWidth=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="l-predict" target="d2" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Predict -> Predictions -->
+        <mxCell id="a16" value="writes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1B5E20;strokeWidth=1;exitX=0.9;exitY=1;entryX=0.3;entryY=0;" edge="1" source="l-predict" target="d3" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Predict -> SNS -->
+        <mxCell id="a17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#C62828;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="sf-predict" target="sns" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- SNS -> SSE Lambda -->
+        <mxCell id="a18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#C62828;strokeWidth=2;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" source="sns" target="lambda-sse" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- SSE Lambda -> Vercel -->
+        <mxCell id="a19" value="SSE" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#C62828;strokeWidth=2;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="lambda-sse" target="vercel" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Vercel -> API Gateway -->
+        <mxCell id="a20" value="REST (HTTPS)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1A73E8;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="vercel" target="api-gw" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- API GW -> Lambda API -->
+        <mxCell id="a21" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1A73E8;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="api-gw" target="lambda-api" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Lambda API -> Segments -->
+        <mxCell id="a22" value="read" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1B5E20;strokeWidth=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="lambda-api" target="d1" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Lambda API -> Speeds -->
+        <mxCell id="a23" value="read" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1B5E20;strokeWidth=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="lambda-api" target="d2" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Lambda API -> Predictions -->
+        <mxCell id="a24" value="read" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1B5E20;strokeWidth=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="lambda-api" target="d3" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
 
       </root>
     </mxGraphModel>
