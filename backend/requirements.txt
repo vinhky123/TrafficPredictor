@@ -1,8 +1,9 @@
 Flask
 flask_cors
-pymongo
-python-dotenv
 pydantic
+python-dotenv
 numpy
 PyWavelets
 torch
+boto3
+aws-lambda-wsgi
