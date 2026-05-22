@@ -39,6 +39,13 @@ export default function Home() {
 
   const handleSelect = useCallback((seg: RoadSegment) => setActive(seg), []);
 
+  const sseUrl = useMemo(() => {
+    if (process.env.NEXT_PUBLIC_SSE_URL) return process.env.NEXT_PUBLIC_SSE_URL;
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    if (!apiUrl) return undefined;
+    return `${apiUrl.replace(/\/+$/, "")}/api/events`;
+  }, []);
+
   return (
     <>
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(1000px_600px_at_20%_-10%,rgba(56,189,248,0.18),transparent),radial-gradient(900px_600px_at_90%_10%,rgba(168,85,247,0.16),transparent)]" />
@@ -73,7 +80,7 @@ export default function Home() {
       </header>
 
       <main className="relative z-10 mx-auto grid h-[calc(100%-73px)] max-w-7xl grid-cols-1 gap-4 px-4 py-4 lg:grid-cols-[380px_1fr]">
-        <Sidebar segments={segments} active={active} onSelect={handleSelect} />
+        <Sidebar segments={segments} active={active} onSelect={handleSelect} sseUrl={sseUrl} />
         <MapPanel
           segments={segments}
           active={active}

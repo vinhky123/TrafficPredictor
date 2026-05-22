@@ -1,15 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ChevronRight, Search } from "lucide-react";
 
 import type { PredictResponse, RoadSegment } from "@/lib/types";
 import { postPredict } from "@/lib/api";
+import { useRealtime } from "@/hooks/useRealtime";
 
 type Props = {
   segments: RoadSegment[];
   active: RoadSegment | null;
   onSelect: (seg: RoadSegment) => void;
+  sseUrl?: string;
 };
 
 function speedBadge(speed?: number) {
@@ -31,10 +33,25 @@ function speedBadge(speed?: number) {
   };
 }
 
-export function Sidebar({ segments, active, onSelect }: Props) {
+export function Sidebar({ segments, active, onSelect, sseUrl }: Props) {
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<PredictResponse | null>(null);
+
+  const { latestUpdate, connected } = useRealtime(sseUrl ?? "");
+
+  useEffect(() => {
+    if (!latestUpdate || !active) return;
+    const segData = latestUpdate.data.segments.find(
+      (s) => s.segment_index === active.segment_index,
+    );
+    if (!segData) return;
+    setData({
+      segment_index: segData.segment_index,
+      current: segData.current ?? undefined,
+      predict: segData.predict,
+    });
+  }, [latestUpdate, active]);
 
   const filtered = useMemo(() => {
     const s = q.trim().toLowerCase();
@@ -114,7 +131,15 @@ export function Sidebar({ segments, active, onSelect }: Props) {
       <div className="rounded-2xl border border-white/10 bg-zinc-950/30 p-4">
         <div className="flex items-center justify-between gap-3">
           <div className="space-y-0.5">
-            <div className="text-xs text-zinc-400">Selected</div>
+            <div className="text-xs text-zinc-400">
+              Selected
+              {connected && (
+                <span className="relative ml-1.5 inline-block h-1.5 w-1.5">
+                  <span className="absolute inset-0 animate-ping rounded-full bg-emerald-400 opacity-75" />
+                  <span className="absolute inset-0 rounded-full bg-emerald-400" />
+                </span>
+              )}
+            </div>
             <div className="truncate text-sm font-semibold">
               {active
                 ? active.name || `Segment #${active.segment_index}`
