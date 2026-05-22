@@ -1,8 +1,8 @@
 # TrafficPredictor - Makefile for common development commands
 # Usage: make <target>
 
-.PHONY: help backend-install backend-test backend-lint frontend-install frontend-test frontend-build \
-        docker-build docker-run docker-stop terraform-init terraform-plan terraform-apply pre-commit-install
+.PHONY: help backend-install backend-test backend-lint backend-run frontend-install frontend-test frontend-build frontend-dev \
+        docker-build docker-run docker-stop docker-logs docker-restart terraform-init terraform-plan terraform-apply terraform-destroy pre-commit-install clean
 
 # ── Default target ────────────────────────────────────────────────────────
 help: ## Show this help message
@@ -71,7 +71,6 @@ docker-run: ## Start all services with Docker Compose
 	@docker compose up -d
 	@echo "Services started:"
 	@echo "  Backend API:  http://localhost:5000"
-	@echo "  Airflow UI:   http://localhost:8080 (airflow / airflow)"
 	@echo "  MongoDB:      localhost:27017"
 
 docker-stop: ## Stop all services
