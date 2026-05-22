@@ -47,9 +47,6 @@ jobs:
       - name: Run tests
         run: |
           cd tests && python -m pytest -v --tb=short --cov=../backend --cov-report=xml
-        env:
-          MONGODB_URI: mongodb://localhost:27017
-          MONGODB_DB_NAME: TrafficTest
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
@@ -97,6 +94,7 @@ jobs:
           npm run build
         env:
           NEXT_PUBLIC_API_URL: http://localhost:5000
+          NEXT_PUBLIC_SSE_URL: http://localhost:5000/api/events
 
   # ── Docker Build Test ──────────────────────────────────────────────────
   docker-build:

@@ -86,16 +86,13 @@ terraform-init: ## Initialize Terraform
 	@cd infra && terraform init
 
 terraform-plan: ## Plan infrastructure changes
-	@cd infra && terraform plan -var-file=environments/dev.tfvars \
-		-var="docdb_master_password=$$DOCDB_PASSWORD"
+	@cd infra && terraform plan -var-file=environments/dev.tfvars
 
 terraform-apply: ## Apply infrastructure changes
-	@cd infra && terraform apply -var-file=environments/dev.tfvars \
-		-var="docdb_master_password=$$DOCDB_PASSWORD"
+	@cd infra && terraform apply -var-file=environments/dev.tfvars
 
 terraform-destroy: ## Destroy all infrastructure
-	@cd infra && terraform destroy -var-file=environments/dev.tfvars \
-		-var="docdb_master_password=$$DOCDB_PASSWORD"
+	@cd infra && terraform destroy -var-file=environments/dev.tfvars
 
 # ── Development Tools ─────────────────────────────────────────────────────
 pre-commit-install: ## Install pre-commit hooks

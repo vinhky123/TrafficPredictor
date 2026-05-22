@@ -35,18 +35,28 @@ make frontend-install
 ### Project Structure
 
 ```
-backend/app/
-├── __init__.py           # App factory with logging & error handlers
-├── app.py                # Entry point
-├── config.py             # Settings dataclass
-├── dependencies.py       # Service container for DI
-├── errors.py             # Custom exceptions & error handlers
-├── schemas.py            # Pydantic request/response models
-├── utils.py              # Utility classes (SegmentMapping, DataForModel)
-├── models/               # ML model definitions
-├── repositories/         # Data access layer
-├── routes/               # API endpoints
-└── services/             # Business logic layer
+backend/
+├── app/                  # Flask application
+│   ├── __init__.py       # App factory with logging & error handlers
+│   ├── config.py         # Settings dataclass
+│   ├── dependencies.py   # Service container for DI
+│   ├── errors/           # Custom exceptions & error handlers
+│   ├── schemas.py        # Pydantic request/response models
+│   ├── models/           # ML model definitions (TimeXer)
+│   ├── repositories/     # DynamoDB data access layer
+│   ├── routes/           # API endpoints
+│   ├── services/         # Business logic layer
+│   └── utils/            # SegmentMapping, DataForModel
+├── lambdas/              # AWS Lambda handlers
+│   ├── api/              # API Gateway entry (Flask + aws-lambda-wsgi)
+│   ├── extract/          # HERE API to S3
+│   ├── transform/        # Parse, register segments, JSONL output
+│   ├── load/             # JSONL to DynamoDB
+│   ├── predict/          # TimeXer inference (container)
+│   ├── notify/           # SSE broadcast via SNS
+│   ├── websocket/        # WS connect/disconnect
+│   └── sse-connect/      # SSE endpoint
+└── step-function/        # ASL definition
 ```
 
 ### Adding a New API Endpoint
@@ -200,16 +210,19 @@ NEXT_PUBLIC_API_URL=http://localhost:5000
 ```
 infra/
 ├── modules/
-│   ├── networking/    # VPC, subnets, route tables
-│   ├── ecr/           # Container registries
-│   ├── ecs/           # Fargate cluster + service
-│   ├── mwaa/          # Managed Airflow
-│   ├── documentdb/    # DocumentDB cluster
-│   ├── dynamodb/      # DynamoDB tables
-│   └── s3/            # S3 buckets
+│   ├── networking/         # VPC, subnets, route tables
+│   ├── ecr/                # ECR repos (predict Lambda container)
+│   ├── s3/                 # S3 buckets (raw, processed, models, lambdas)
+│   ├── dynamodb/           # DynamoDB tables (segments, speeds, predictions, connections)
+│   ├── lambda-function/    # Reusable Lambda function module
+│   ├── api-gateway/        # REST API Gateway
+│   ├── sse-api-gateway/    # SSE API Gateway
+│   ├── step-function/      # State machine
+│   ├── eventbridge/        # Schedule rule
+│   └── sns/                # Notification topic
 ├── environments/
-│   ├── dev.tfvars     # Dev environment config
-│   └── prod.tfvars    # Prod environment config
+│   ├── dev.tfvars          # Dev environment config
+│   └── prod.tfvars         # Prod environment config
 ```
 
 ### Deploying Changes
@@ -221,27 +234,10 @@ cd infra
 terraform init
 
 # Preview changes
-terraform plan -var-file=environments/dev.tfvars \
-  -var="docdb_master_password=YOUR_PASSWORD"
+terraform plan -var-file=environments/dev.tfvars
 
 # Apply
-terraform apply -var-file=environments/dev.tfvars \
-  -var="docdb_master_password=YOUR_PASSWORD"
-```
-
-### State Management
-
-The project uses remote state storage:
-
-```hcl
-# providers.tf
-terraform {
-  backend "s3" {
-    bucket = "trafficpredictor-terraform-state"
-    key    = "infrastructure/terraform.tfstate"
-    region = "ap-southeast-1"
-  }
-}
+terraform apply -var-file=environments/dev.tfvars
 ```
 
 ## Testing
