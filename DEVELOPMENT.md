@@ -193,68 +193,6 @@ Create `.env.local` in the `web` directory:
 NEXT_PUBLIC_API_URL=http://localhost:5000
 ```
 
-## Working with Airflow
-
-### DAG Structure
-
-```
-airflow/dags/
-└── traffic_etl_dag.py    # Main ETL pipeline
-
-airflow/plugins/
-└── operators/            # Custom operators
-```
-
-### Adding a New Task
-
-1. Define Python callable:
-
-```python
-def my_new_task(**context):
-    """Task logic here."""
-    logger.info("Running my new task")
-    return {"result": "success"}
-```
-
-2. Add to DAG:
-
-```python
-t_new = PythonOperator(
-    task_id="my_new_task",
-    python_callable=my_new_task,
-)
-
-# Set dependencies
-t_existing >> t_new
-```
-
-### Testing DAG Locally
-
-```bash
-# Start Airflow
-docker compose up -d airflow-webserver airflow-scheduler airflow-worker
-
-# Access UI at http://localhost:8080
-# Login: airflow / airflow
-
-# Trigger DAG manually or wait for schedule
-```
-
-### Airflow Variables
-
-Set required variables in Airflow UI (Admin → Variables):
-
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `HERE_API_KEY` | HERE Traffic API key | `your-api-key` |
-| `MONGODB_URI` | MongoDB connection string | `mongodb://mongo:27017` |
-| `MONGODB_DB_NAME` | Database name | `Traffic` |
-| `S3_BUCKET` | S3 bucket for data | `traffic-data` |
-| `DYNAMODB_TABLE` | Segment registry table | `road-segments` |
-| `BACKEND_URL` | Flask API URL | `http://backend:5000` |
-| `TELEGRAM_BOT_TOKEN` | Notification bot token | `123456:ABC...` |
-| `TELEGRAM_CHAT_ID` | Notification chat ID | `-123456789` |
-
 ## Working with Infrastructure
 
 ### Terraform Modules

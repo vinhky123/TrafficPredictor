@@ -119,15 +119,6 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Build airflow image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./airflow
-          push: false
-          tags: traffic-predictor-airflow:test
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
   # ── Terraform Validate ─────────────────────────────────────────────────
   terraform-validate:
     name: Terraform Validate

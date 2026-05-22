@@ -1,0 +1,41 @@
+{
+  "Comment": "Traffic ETL Pipeline",
+  "StartAt": "Extract",
+  "States": {
+    "Extract": {
+      "Type": "Task",
+      "Resource": "${ExtractLambdaArn}",
+      "ResultPath": "$.extract",
+      "Next": "Transform"
+    },
+    "Transform": {
+      "Type": "Task",
+      "Resource": "${TransformLambdaArn}",
+      "Parameters": {
+        "raw_bucket.$": "$.extract.bucket",
+        "raw_key.$": "$.extract.key"
+      },
+      "ResultPath": "$.transform",
+      "Next": "Load"
+    },
+    "Load": {
+      "Type": "Task",
+      "Resource": "${LoadLambdaArn}",
+      "Parameters": {
+        "processed_bucket.$": "$.transform.bucket",
+        "processed_key.$": "$.transform.key"
+      },
+      "ResultPath": "$.load",
+      "Next": "Notify"
+    },
+    "Notify": {
+      "Type": "Task",
+      "Resource": "${NotifyLambdaArn}",
+      "Parameters": {
+        "action": "etl_complete",
+        "load_result.$": "$.load"
+      },
+      "End": true
+    }
+  }
+}
