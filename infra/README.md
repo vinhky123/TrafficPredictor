@@ -68,9 +68,9 @@ docker build -t traffic-predictor-backend ./backend
 docker tag traffic-predictor-backend:latest <backend_ecr_repo>:latest
 docker push <backend_ecr_repo>:latest
 
-# Upload DAGs to MWAA S3 bucket
-aws s3 sync ./airflow/dags/ s3://<dag_bucket>/dags/
+# Upload Lambda code
+aws s3 cp ./backend/lambdas/ s3://<deployment_bucket>/lambdas/ --recursive
 
-# Force new ECS deployment
-aws ecs update-service --cluster <cluster> --service <service> --force-new-deployment
+# Deploy Step Functions state machine
+aws stepfunctions update-state-machine --state-machine-arn <sfn_arn> --definition file://backend/step-function/definition.asl.json
 ```
