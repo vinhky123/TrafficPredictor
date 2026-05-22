@@ -12,77 +12,81 @@ TrafficPredictor is a serverless three-tier system designed for real-time traffi
 
 ## Architecture Diagram
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│                        AWS Cloud                              │
-│                                                               │
-│  HERE API → Step Function (Extract → Transform → Load → Predict)
-│              ↕                                                │
-│  DynamoDB ← API Gateway → Lambda REST API                     │
-│              ↕                                                │
-│  WebSocket/SNS → Browser (SSE)                                │
-│                                                               │
-└──────────────────────────────────────────────────────────────┘
-                            ↑
-┌──────────────────────────────────────────────────────────────┐
-│                     Frontend (Vercel)                         │
-│  Next.js 15 + Tailwind CSS + Leaflet Map + SSE client        │
-└──────────────────────────────────────────────────────────────┘
-```
-
 ```mermaid
 flowchart TB
-  subgraph ingestion [Data Ingestion]
+  subgraph ext ["External"]
     HERE["HERE Traffic Flow API"]
-    HERE -->|"HTTP GET /v7/flow"| SF
+    Browser["Browser / User"]
+    Vercel["Vercel (Next.js)"]
   end
 
-  subgraph aws [AWS Cloud]
-    subgraph stepfunction [AWS Step Functions]
-      Extract["Extract Lambda"]
-      Transform["Transform Lambda"]
-      Load["Load to DynamoDB"]
-      Predict["Predict Lambda"]
-      Extract --> Transform --> Load --> Predict
+  subgraph aws ["AWS Cloud"]
+    direction TB
+
+    subgraph api ["API Layer"]
+      APIGW["API Gateway REST"]
+      LambdaAPI["Lambda: REST API (Flask + aws-lambda-wsgi)"]
+      LambdaSSE["Lambda: SSE Broadcast"]
     end
 
-    subgraph storage [Storage Layer]
-      DynDB["Amazon DynamoDB"]
-      S3["S3 — Raw JSON"]
+    subgraph pipeline ["ETL Pipeline (Step Function)"]
+      direction TB
+      EV["EventBridge (schedule: */5 * * * *)"] --> SF["Step Function"]
+
+      subgraph sf_extract ["Extract"]
+        L1["Lambda: Extract (HERE API to S3)"]
+      end
+
+      subgraph sf_transform ["Transform"]
+        L2["Lambda: Transform (Parse, Register, JSONL)"]
+      end
+
+      subgraph sf_load ["Load"]
+        L3["Lambda: Load (JSONL to DynamoDB)"]
+      end
+
+      subgraph sf_predict ["Predict"]
+        L4["Lambda: Predict (PyTorch Container)"]
+      end
+
+      L1 --> L2 --> L3 --> L4
     end
 
-    Extract --> S3
-    Load --> DynDB
-
-    subgraph api [API Layer]
-      APIGW["API Gateway"]
-      Lambda["Lambda REST API (Flask + aws-lambda-wsgi)"]
-      TimeXer["TimeXer Model"]
-      APIGW --> Lambda
-      Lambda --> TimeXer
+    subgraph storage ["Storage"]
+      D1["DynamoDB: Segments (PK: shape_hash)"]
+      D2["DynamoDB: Speeds (PK: seg, SK: ts)"]
+      D3["DynamoDB: Predictions (PK: seg, SK: ts)"]
+      D4["DynamoDB: WS Connections (PK: connection_id)"]
+      S3RAW["S3: Raw HERE JSON"]
+      S3PROC["S3: Processed JSONL"]
     end
 
-    DynDB --> Lambda
-    Predict -->|triggers| Lambda
-
-    subgraph realtime [Real-time Updates]
-      SNS["Amazon SNS"]
-      SSE["Server-Sent Events"]
-    end
-
-    Predict --> SNS --> SSE
+    SNS["SNS Topic (pipeline-notifications)"]
   end
 
-  subgraph client [Client Layer]
-    Vercel["Vercel"]
-    NextJS["Next.js Dashboard"]
-    Leaflet["Leaflet Map"]
-    Vercel --> NextJS
-    NextJS --> Leaflet
-  end
+  HERE -- "HTTP GET /v7/flow" --> L1
 
-  NextJS -->|"REST API + SSE"| APIGW
-  User["End User"] --> NextJS
+  L1 -- "writes" --> S3RAW
+  L2 -- "reads/writes" --> S3RAW
+  L2 -- "registers" --> D1
+  L2 -- "writes" --> S3PROC
+  L3 -- "reads" --> S3PROC
+  L3 -- "batch writes" --> D2
+  L4 -- "reads recent" --> D2
+  L4 -- "writes" --> D3
+
+  L4 --> SNS
+  SNS --> LambdaSSE
+
+  LambdaAPI -- "reads" --> D1
+  LambdaAPI -- "reads" --> D2
+  LambdaAPI -- "reads" --> D3
+
+  Browser -- "open app" --> Vercel
+  Vercel -- "REST API (HTTPS)" --> APIGW
+  APIGW --> LambdaAPI
+
+  LambdaSSE -- "SSE" --> Vercel
 ```
 
 ## Component Details
