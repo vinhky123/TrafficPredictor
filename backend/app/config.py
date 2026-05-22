@@ -6,13 +6,16 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class Settings:
-    mongo_uri: str | None
+    mongo_uri: str | None = None
     mongo_db_name: str = "Traffic"
     mongo_pool_size: int = 100
 
     model_path: str = os.path.join(os.path.dirname(__file__), "notebook", "TimeXer.pth")
 
-    dynamodb_table: str = "traffic-predictor-dev-road-segments"
+    segments_table: str = "traffic-predictor-dev-road-segments"
+    speeds_table: str = "traffic-predictor-dev-speeds"
+    predictions_table: str = "traffic-predictor-dev-predictions"
+    connections_table: str = "traffic-predictor-dev-connections"
     aws_region: str = "ap-southeast-1"
 
     @staticmethod
@@ -25,7 +28,10 @@ class Settings:
             os.path.dirname(__file__), "notebook", "TimeXer.pth"
         )
 
-        dynamodb_table = os.getenv("DYNAMODB_TABLE", "traffic-predictor-dev-road-segments")
+        segments_table = os.getenv("SEGMENTS_TABLE", "traffic-predictor-dev-road-segments")
+        speeds_table = os.getenv("SPEEDS_TABLE", "traffic-predictor-dev-speeds")
+        predictions_table = os.getenv("PREDICTIONS_TABLE", "traffic-predictor-dev-predictions")
+        connections_table = os.getenv("CONNECTIONS_TABLE", "traffic-predictor-dev-connections")
         aws_region = os.getenv("AWS_REGION", "ap-southeast-1")
 
         return Settings(
@@ -33,7 +39,10 @@ class Settings:
             mongo_db_name=mongo_db_name,
             mongo_pool_size=mongo_pool_size,
             model_path=model_path,
-            dynamodb_table=dynamodb_table,
+            segments_table=segments_table,
+            speeds_table=speeds_table,
+            predictions_table=predictions_table,
+            connections_table=connections_table,
             aws_region=aws_region,
         )
 
